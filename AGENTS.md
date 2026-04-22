@@ -25,6 +25,10 @@ Claude Code 기반 티스토리 블로그 글 자동 생성 파이프라인. 주
 ## 전체 파이프라인
 
 ```
+/blog <주제>        →  초안 생성 + 자동 검수/교정 한 번에 (권장)
+/blog-images        →  posts/images/<slug>/ 에 이미지 3장씩 생성 (수동 호출)
+
+# 단계별 실행도 가능
 /blog-post <주제>   →  posts/YYYY-MM-DD-slug.md 초안 생성 (9문 Q&A)
 /blog-review        →  CLAUDE.md 규칙으로 검수 (--fix 옵션)
 /blog-images        →  posts/images/<slug>/ 에 이미지 3장씩 생성

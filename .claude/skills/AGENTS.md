@@ -10,6 +10,7 @@
 
 | Directory | Purpose |
 |-----------|---------|
+| `blog/` | `/blog <주제>` — 초안 생성 + 자동 검수/교정까지 묶은 메타 스킬 (이미지는 수동) |
 | `blog-post/` | `/blog-post <주제>` — 9문 질의응답으로 마크다운 초안 생성 |
 | `blog-review/` | `/blog-review [파일]` — CLAUDE.md 규칙 자가 검수, `--fix` 플래그로 안전 치환 |
 | `blog-images/` | `/blog-images [파일]` — 초안의 이미지 프롬프트로 Replicate Flux schnell 호출 |

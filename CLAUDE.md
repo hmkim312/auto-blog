@@ -72,3 +72,12 @@
 - 섹션 2(경험): 800자
 - 마치며: 200자
 - 선택 섹션이 없으면 섹션 1/2가 각각 +200자씩 늘어나도 됨
+
+## 프로젝트 구조 참조
+
+코드베이스 구조/컨벤션/의존성은 AGENTS.md 계층에 정리되어 있다. 아래 파일을 모두 포함해 컨텍스트로 사용할 것.
+
+@AGENTS.md
+@.claude/AGENTS.md
+@.claude/skills/AGENTS.md
+@scripts/AGENTS.md

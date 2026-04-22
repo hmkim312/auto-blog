@@ -8,7 +8,7 @@
 # ]
 # ///
 """
-블로그 포스트의 이미지 프롬프트를 읽어 Replicate Flux schnell로 이미지 생성.
+블로그 포스트의 이미지 프롬프트를 읽어 Replicate recraft-v3로 이미지 생성.
 
 사용법:
   uv run scripts/generate-images.py posts/2026-04-22-docker-입문.md
@@ -31,9 +31,11 @@ from dotenv import load_dotenv
 
 STYLE_SUFFIX = (
     "flat 2D illustration, soft pastel colors, minimal clean background, "
-    "tech blog thumbnail, no text, no letters, no writing, 16:9"
+    "tech blog thumbnail, no text, no letters, no writing"
 )
-MODEL = "black-forest-labs/flux-schnell"
+MODEL = "recraft-ai/recraft-v3"
+IMAGE_SIZE = "1820x1024"  # ~16:9
+IMAGE_STYLE = "digital_illustration"
 ROOT = Path(__file__).resolve().parent.parent
 POSTS_DIR = ROOT / "posts"
 IMAGES_ROOT = POSTS_DIR / "images"
@@ -90,23 +92,17 @@ def ensure_token() -> None:
         sys.exit("[error] REPLICATE_API_TOKEN 없음. .env 에 추가하세요")
 
 
-def generate_for_prompt(prompt: str, n: int, out_dir: Path, base_name: str, retries: int = 3) -> list[Path]:
-    full_prompt = f"{prompt}, {STYLE_SUFFIX}"
-    print(f"  → {prompt[:60]}{'...' if len(prompt) > 60 else ''}")
+def _run_once(full_prompt: str, retries: int = 3):
     for attempt in range(retries):
         try:
-            output = replicate.run(
+            return replicate.run(
                 MODEL,
                 input={
                     "prompt": full_prompt,
-                    "num_outputs": n,
-                    "aspect_ratio": "16:9",
-                    "output_format": "webp",
-                    "output_quality": 90,
-                    "go_fast": True,
+                    "size": IMAGE_SIZE,
+                    "style": IMAGE_STYLE,
                 },
             )
-            break
         except Exception as e:
             msg = str(e)
             if "429" in msg and attempt < retries - 1:
@@ -115,16 +111,29 @@ def generate_for_prompt(prompt: str, n: int, out_dir: Path, base_name: str, retr
                 time.sleep(wait)
             else:
                 raise
-    saved: list[Path] = []
+
+
+def _save_output(output, dest: Path) -> None:
+    item = output[0] if isinstance(output, list) else output
+    if hasattr(item, "read"):
+        dest.write_bytes(item.read())
+    else:
+        resp = requests.get(str(item), timeout=60)
+        resp.raise_for_status()
+        dest.write_bytes(resp.content)
+
+
+def generate_for_prompt(prompt: str, n: int, out_dir: Path, base_name: str) -> list[Path]:
+    full_prompt = f"{prompt}, {STYLE_SUFFIX}"
+    print(f"  → {prompt[:60]}{'...' if len(prompt) > 60 else ''}")
     out_dir.mkdir(parents=True, exist_ok=True)
-    for idx, item in enumerate(output, 1):
+    saved: list[Path] = []
+    for idx in range(1, n + 1):
+        if idx > 1:
+            time.sleep(3)
+        output = _run_once(full_prompt)
         dest = out_dir / f"{base_name}-{idx}.webp"
-        if hasattr(item, "read"):
-            dest.write_bytes(item.read())
-        else:
-            resp = requests.get(str(item), timeout=60)
-            resp.raise_for_status()
-            dest.write_bytes(resp.content)
+        _save_output(output, dest)
         saved.append(dest)
         print(f"    saved: {dest.relative_to(ROOT)}")
     return saved
@@ -136,9 +145,9 @@ def open_finder(path: Path) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="블로그 포스트용 이미지 생성 (Replicate Flux schnell)")
+    parser = argparse.ArgumentParser(description="블로그 포스트용 이미지 생성 (Replicate recraft-v3)")
     parser.add_argument("post", nargs="?", help="대상 .md 파일 경로 (생략 시 posts/ 최신)")
-    parser.add_argument("--per-prompt", type=int, default=3, help="프롬프트당 이미지 장수 (1~4, 기본 3)")
+    parser.add_argument("--per-prompt", type=int, default=1, help="프롬프트당 이미지 장수 (1~4, 기본 1)")
     parser.add_argument("--no-open", action="store_true", help="완료 후 Finder 열지 않음")
     args = parser.parse_args()
 
@@ -174,7 +183,7 @@ def main() -> None:
         all_saved.extend(generate_for_prompt(prompt, args.per_prompt, out_dir, base))
         print()
 
-    total_cost = 0.003 * len(all_saved)  # flux-schnell 기준 추정
+    total_cost = 0.04 * len(all_saved)  # recraft-v3 기준 추정
     print(f"완료: {len(all_saved)}장, 추정 비용 ~${total_cost:.3f}")
 
     if not args.no_open:

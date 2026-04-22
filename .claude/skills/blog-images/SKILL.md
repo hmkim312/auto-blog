@@ -1,10 +1,10 @@
 ---
 name: blog-images
-description: 블로그 초안의 이미지 프롬프트를 Replicate Flux schnell로 실제 이미지 생성, posts/images/<slug>/ 에 저장
+description: 블로그 초안의 이미지 프롬프트를 Replicate recraft-v3로 실제 이미지 생성, posts/images/<slug>/ 에 저장
 argument-hint: [파일경로] [--per-prompt N] [--no-open]
 ---
 
-블로그 포스트 하단의 `## 이미지 프롬프트` 섹션을 파싱해 Replicate Flux schnell로 실제 이미지를 생성하는 스킬.
+블로그 포스트 하단의 `## 이미지 프롬프트` 섹션을 파싱해 Replicate recraft-v3로 실제 이미지를 생성하는 스킬.
 
 ## 사용법
 
@@ -30,7 +30,7 @@ argument-hint: [파일경로] [--per-prompt N] [--no-open]
 ### 1단계: 인자 파싱
 - 첫 번째 위치 인자가 `.md` 경로면 해당 파일 대상
 - 없으면 `posts/` 하위에서 수정 시각 가장 최근 `.md` 선택
-- `--per-prompt N` (1~4, 기본 3) — 프롬프트당 생성 장수
+- `--per-prompt N` (1~4, 기본 1) — 프롬프트당 생성 장수
 - `--no-open` — 완료 후 Finder 자동 오픈 비활성
 
 ### 2단계: 스크립트 실행
@@ -58,15 +58,16 @@ posts/images/2026-04-22-docker-입문/
 
 ## 모델 고정 사항
 
-- 모델: `black-forest-labs/flux-schnell`
-- 비율: 16:9
-- 포맷: WebP, quality 90
-- 스타일 suffix 자동 부착: `flat 2D illustration, soft pastel colors, minimal clean background, tech blog thumbnail, no text, no letters, no writing, 16:9`
+- 모델: `recraft-ai/recraft-v3` (플랫 일러스트/벡터 아트 특화)
+- 사이즈: `1820x1024` (~16:9)
+- 스타일: `digital_illustration`
+- 포맷: WebP
+- 스타일 suffix 자동 부착: `flat 2D illustration, soft pastel colors, minimal clean background, tech blog thumbnail, no text, no letters, no writing`
 
 ## 비용 안내
 
-- flux-schnell 장당 약 $0.003
-- 기본 3개 프롬프트 × 3장 = 9장 ≈ $0.027/글
+- recraft-v3 장당 약 $0.04
+- 기본 프롬프트당 1장 → 4개 프롬프트 ≈ $0.16/글
 - 실행 종료 시 추정 비용 출력됨
 
 ## 규칙

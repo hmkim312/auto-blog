@@ -57,7 +57,7 @@ Claude Code 기반 티스토리 블로그 글 자동 생성 파이프라인. 주
 
 ### External
 - `uv` (Python 의존성/실행)
-- `replicate` (Flux schnell API)
+- `replicate` (recraft-v3 API)
 - `python-dotenv`, `requests` (보조 라이브러리)
 - Replicate 계정/API 토큰 (이미지 생성 시 필요)
 

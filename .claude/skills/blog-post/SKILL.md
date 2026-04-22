@@ -109,7 +109,7 @@ Q9. 이 글을 읽는 입문자에게 가장 전달하고 싶은 한 문장은?
 ### 3단계: 이미지 프롬프트 생성
 
 초안 하단에 아래 형식으로 이미지 프롬프트를 추가한다.
-이 프롬프트는 `/blog-images` 스킬이 Replicate Flux schnell로 자동 생성한다.
+이 프롬프트는 `/blog-images` 스킬이 Replicate recraft-v3로 자동 생성한다.
 
 ```markdown
 ---

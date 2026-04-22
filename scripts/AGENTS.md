@@ -10,7 +10,7 @@
 
 | File | Description |
 |------|-------------|
-| `generate-images.py` | Replicate Flux schnell로 블로그 포스트의 이미지 프롬프트를 실제 이미지(WebP)로 변환. `/blog-images` 스킬이 호출. |
+| `generate-images.py` | Replicate recraft-v3로 블로그 포스트의 이미지 프롬프트를 실제 이미지(WebP)로 변환. `/blog-images` 스킬이 호출. |
 
 ## For AI Agents
 

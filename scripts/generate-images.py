@@ -22,6 +22,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import replicate
@@ -89,25 +90,35 @@ def ensure_token() -> None:
         sys.exit("[error] REPLICATE_API_TOKEN 없음. .env 에 추가하세요")
 
 
-def generate_for_prompt(prompt: str, n: int, out_dir: Path, base_name: str) -> list[Path]:
+def generate_for_prompt(prompt: str, n: int, out_dir: Path, base_name: str, retries: int = 3) -> list[Path]:
     full_prompt = f"{prompt}, {STYLE_SUFFIX}"
     print(f"  → {prompt[:60]}{'...' if len(prompt) > 60 else ''}")
-    output = replicate.run(
-        MODEL,
-        input={
-            "prompt": full_prompt,
-            "num_outputs": n,
-            "aspect_ratio": "16:9",
-            "output_format": "webp",
-            "output_quality": 90,
-            "go_fast": True,
-        },
-    )
+    for attempt in range(retries):
+        try:
+            output = replicate.run(
+                MODEL,
+                input={
+                    "prompt": full_prompt,
+                    "num_outputs": n,
+                    "aspect_ratio": "16:9",
+                    "output_format": "webp",
+                    "output_quality": 90,
+                    "go_fast": True,
+                },
+            )
+            break
+        except Exception as e:
+            msg = str(e)
+            if "429" in msg and attempt < retries - 1:
+                wait = 15 * (attempt + 1)
+                print(f"  [rate limit] {wait}초 대기 후 재시도... ({attempt + 1}/{retries})")
+                time.sleep(wait)
+            else:
+                raise
     saved: list[Path] = []
     out_dir.mkdir(parents=True, exist_ok=True)
     for idx, item in enumerate(output, 1):
         dest = out_dir / f"{base_name}-{idx}.webp"
-        # replicate 0.32+ returns FileOutput objects; older returns URLs
         if hasattr(item, "read"):
             dest.write_bytes(item.read())
         else:
@@ -155,7 +166,9 @@ def main() -> None:
     print()
 
     all_saved: list[Path] = []
-    for label, prompt in prompts:
+    for i, (label, prompt) in enumerate(prompts):
+        if i > 0:
+            time.sleep(12)  # rate limit: burst=1, ~10s window
         base = label_slug(label)
         print(f"[{label}]")
         all_saved.extend(generate_for_prompt(prompt, args.per_prompt, out_dir, base))

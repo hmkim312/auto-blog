@@ -107,14 +107,14 @@ Q9. 이 글을 읽는 입문자에게 가장 전달하고 싶은 한 문장은?
 ### 3단계: 이미지 프롬프트 생성
 
 초안 하단에 아래 형식으로 이미지 프롬프트를 추가한다.
-DALL-E, Midjourney, Stable Diffusion 등에 붙여넣어 사용한다.
+이 프롬프트는 `/blog-images` 스킬이 Replicate Flux schnell로 자동 생성한다.
 
 ```markdown
 ---
-## 이미지 프롬프트 (DALL-E / Midjourney용)
+## 이미지 프롬프트
 
 **대표 썸네일**
-> {주제를 시각적으로 표현하는 영문 프롬프트, flat illustration style, clean background, tech blog thumbnail}
+> {주제를 시각적으로 표현하는 영문 프롬프트}
 
 **섹션 1 삽화**
 > {기술 개념을 설명하는 다이어그램 또는 일러스트 프롬프트}
@@ -122,6 +122,15 @@ DALL-E, Midjourney, Stable Diffusion 등에 붙여넣어 사용한다.
 **섹션 2 삽화**
 > {개발 경험/삽질 장면을 표현하는 프롬프트, developer at computer, frustrated then happy}
 ```
+
+**이미지 프롬프트 작성 규칙:**
+- **텍스트/문자를 이미지 안에 넣지 않는다** — 확산 모델이 한글/영문 텍스트를 제대로 그리지 못함. 아래 단어를 프롬프트에 쓰지 말 것:
+  - `labeled`, `with text`, `sign`, `word`, `letter`, `logo`, `title`, `caption`, `writing`, `typography`
+  - `"CLAUDE.md" glowing` 같이 파일명/이름을 직접 노출시키는 표현도 금지
+- 영문으로 작성
+- 스타일 suffix(`flat 2D illustration, soft pastel colors, ...`)는 스크립트가 자동 부착하므로 프롬프트에는 내용만
+- 선택 섹션이 있으면 `**선택 섹션 삽화**` 항목을 추가
+- 해당 주제/섹션을 **상징하는 장면**을 묘사 (파일명 대신 "document icon in folder tree", 코드 대신 "abstract code blocks" 식으로)
 
 ## 규칙
 

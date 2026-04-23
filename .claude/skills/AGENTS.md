@@ -10,20 +10,23 @@
 
 | Directory | Purpose |
 |-----------|---------|
-| `blog/` | `/blog <주제>` — 초안 생성 + 자동 검수/교정까지 묶은 메타 스킬 (이미지는 수동) |
-| `blog-post/` | `/blog-post <주제>` — 9문 질의응답으로 마크다운 초안 생성 |
+| `blog/` | `/blog <주제>` — 리서치+초안+자동 검수/교정까지 묶은 메타 스킬 (이미지는 수동) |
+| `blog-research/` | `/blog-research <주제> [--profile X]` — Tavily 웹 검색 + 9문 Q&A 로 초안 생성 (현재 주 경로) |
+| `blog-post/` | `/blog-post <주제>` — **DEPRECATED 리다이렉트 shim.** `/blog-research` 로 안내만 한다. 삭제 금지 (호환성) |
 | `blog-review/` | `/blog-review [파일]` — CLAUDE.md 규칙 자가 검수, `--fix` 플래그로 안전 치환 |
 | `blog-images/` | `/blog-images [파일]` — 초안의 이미지 프롬프트로 Replicate recraft-v3 호출 |
 
 ## 스킬 간 관계
 
 ```
-blog-post      (초안 생성)
+blog-research  (프로파일 로드 + Tavily 검색 + 9문 Q&A → 초안)
    ↓ posts/YYYY-MM-DD-slug.md
 blog-review    (검수 + 교정)
    ↓ 같은 파일 수정
 blog-images    (이미지 생성)
    → posts/images/<slug>/*.webp
+
+blog-post → (shim, 호출 시 /blog-research 안내만 출력)
 ```
 
 순서를 강제하지는 않는다. 사용자가 임의 순서로 호출 가능 (예: 초안 수기 수정 → 이미지만).
@@ -49,8 +52,11 @@ blog-images    (이미지 생성)
 ### Internal
 - `../../CLAUDE.md` — 글쓰기 규칙의 기준
 - `../../scripts/generate-images.py` — `blog-images`가 호출
+- `../../scripts/tavily-search.py` — `blog-research`가 호출
+- `../../profiles/<name>.yml` — `blog-research` 가 읽는 필자별 프로파일
 
 ### External
-- `blog-images`만 외부 의존: Replicate API, `uv`, `REPLICATE_API_TOKEN`
+- `blog-images`: Replicate API, `uv`, `REPLICATE_API_TOKEN`
+- `blog-research`: Tavily API(무료 월 1,000건), `uv`, `TAVILY_API_KEY`
 
 <!-- MANUAL: -->

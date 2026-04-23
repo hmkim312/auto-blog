@@ -1,0 +1,29 @@
+{
+  "query": "dry-run sample query",
+  "count": 3,
+  "results": [
+    {
+      "title": "Sample Result A — Introduction to Example Topic",
+      "url": "https://example.com/intro",
+      "snippet": "예시 결과 A. 이 스니펫은 dry-run 픽스처이며 실제 Tavily 응답이 아니다. 스킬의 파이프라인 스모크 테스트용으로만 사용된다.",
+      "score": 0.91,
+      "published_date": "2026-02-10"
+    },
+    {
+      "title": "Sample Result B — Deep Dive Guide",
+      "url": "https://example.com/guide",
+      "snippet": "예시 결과 B. 구조가 올바른지 확인하는 용도로만 쓴다. 네트워크 호출 없이 이 JSON 이 그대로 stdout 으로 반환된다.",
+      "score": 0.83,
+      "published_date": "2026-01-28"
+    },
+    {
+      "title": "Sample Result C — Community Discussion",
+      "url": "https://example.com/discussion",
+      "snippet": "예시 결과 C. 스킬이 결과를 파싱해 요약하는 로직을 검증할 때 사용한다.",
+      "score": 0.76,
+      "published_date": null
+    }
+  ],
+  "answer": "이것은 dry-run 픽스처이며 실제 Tavily 응답이 아니다. 스킬 파이프라인 테스트용.",
+  "budget": {"dry_run": true}
+}

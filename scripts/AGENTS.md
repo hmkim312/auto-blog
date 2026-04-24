@@ -11,7 +11,7 @@
 | File | Description |
 |------|-------------|
 | `generate-images.py` | Replicate recraft-v3로 블로그 포스트의 이미지 프롬프트를 실제 이미지(WebP)로 변환. `/blog-images` 스킬이 호출. |
-| `tavily-search.py` | Tavily 웹 검색 API 어댑터. `BLOG_RESEARCH_SESSION_ID` 기반 세션 카운터로 호출 ≤3 하드 강제. `--dry-run` fixture 지원. `/blog-research` 스킬이 호출. |
+| `tavily-search.py` | Tavily 웹 검색 API 어댑터. `BLOG_RESEARCH_SESSION_ID` 기반 세션 카운터로 호출 ≤8 하드 강제. `--dry-run` fixture 지원. `/blog-research` 스킬이 호출. |
 | `fixtures/tavily-dry-run.json` | `tavily-search.py --dry-run` 이 반환하는 고정 응답. 네트워크 없이 파이프라인 스모크 테스트용. |
 
 ## For AI Agents

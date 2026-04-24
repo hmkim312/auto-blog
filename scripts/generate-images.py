@@ -8,7 +8,7 @@
 # ]
 # ///
 """
-블로그 포스트의 이미지 프롬프트를 읽어 Replicate recraft-v3로 이미지 생성.
+블로그 포스트의 이미지 프롬프트를 읽어 Replicate FLUX.1.1-pro 로 이미지 생성.
 
 사용법:
   uv run scripts/generate-images.py posts/2026-04-22-docker-입문.md
@@ -30,12 +30,15 @@ import requests
 from dotenv import load_dotenv
 
 STYLE_SUFFIX = (
-    "flat 2D illustration, soft pastel colors, minimal clean background, "
-    "tech blog thumbnail, no text, no letters, no writing"
+    "modern editorial illustration, clean composition, soft color palette, "
+    "minimal background, tech blog hero image, no text, no letters, no writing"
 )
-MODEL = "recraft-ai/recraft-v3"
-IMAGE_SIZE = "1820x1024"  # ~16:9
-IMAGE_STYLE = "digital_illustration"
+MODEL = "black-forest-labs/flux-1.1-pro"
+ASPECT_RATIO = "16:9"
+OUTPUT_FORMAT = "webp"
+OUTPUT_QUALITY = 90
+SAFETY_TOLERANCE = 2
+COST_PER_IMAGE = 0.04  # flux-1.1-pro 기준
 ROOT = Path(__file__).resolve().parent.parent
 POSTS_DIR = ROOT / "posts"
 IMAGES_ROOT = POSTS_DIR / "images"
@@ -99,8 +102,11 @@ def _run_once(full_prompt: str, retries: int = 3):
                 MODEL,
                 input={
                     "prompt": full_prompt,
-                    "size": IMAGE_SIZE,
-                    "style": IMAGE_STYLE,
+                    "aspect_ratio": ASPECT_RATIO,
+                    "output_format": OUTPUT_FORMAT,
+                    "output_quality": OUTPUT_QUALITY,
+                    "safety_tolerance": SAFETY_TOLERANCE,
+                    "prompt_upsampling": True,
                 },
             )
         except Exception as e:
@@ -183,7 +189,7 @@ def main() -> None:
         all_saved.extend(generate_for_prompt(prompt, args.per_prompt, out_dir, base))
         print()
 
-    total_cost = 0.04 * len(all_saved)  # recraft-v3 기준 추정
+    total_cost = COST_PER_IMAGE * len(all_saved)
     print(f"완료: {len(all_saved)}장, 추정 비용 ~${total_cost:.3f}")
 
     if not args.no_open:

@@ -13,7 +13,7 @@ Tavily 웹 검색 어댑터. /blog-research 스킬이 호출한다.
   BLOG_RESEARCH_SESSION_ID=<id> uv run scripts/tavily-search.py --query "..."
   BLOG_RESEARCH_SESSION_ID=smoke uv run scripts/tavily-search.py --query "test" --dry-run
 
-스킬은 세션 단위 하드 카운터로 1 run 당 Tavily 호출 ≤3 을 보장한다.
+스킬은 세션 단위 하드 카운터로 1 run 당 Tavily 호출 ≤8 을 보장한다.
 """
 from __future__ import annotations
 
@@ -162,7 +162,7 @@ def parse_args() -> argparse.Namespace:
         default=DEFAULT_BUDGET_FILE,
         help="세션 카운터 JSON 파일",
     )
-    parser.add_argument("--budget-max", type=int, default=3, help="세션당 허용 호출 횟수 상한")
+    parser.add_argument("--budget-max", type=int, default=8, help="세션당 허용 호출 횟수 상한")
     args = parser.parse_args()
 
     if not args.query.strip():

@@ -150,7 +150,7 @@ def summarize_results(raw: dict, max_results: int) -> list[dict]:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Tavily 웹 검색 어댑터 (블로그 리서치용)")
     parser.add_argument("--query", required=True, help="검색어 (한국어/영어)")
-    parser.add_argument("--max-results", type=int, default=5, help="반환 결과 개수 (1~10)")
+    parser.add_argument("--max-results", type=int, default=10, help="반환 결과 개수 (1~10)")
     parser.add_argument("--search-depth", choices=["basic", "advanced"], default="basic")
     parser.add_argument("--include-answer", action="store_true", help="Tavily LLM 요약 포함")
     parser.add_argument("--language", default=None, help="검색 쿼리 언어 힌트 (예: ko)")

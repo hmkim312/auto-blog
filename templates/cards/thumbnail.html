@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: linear-gradient(155deg, {{ base }} 0%, #050510 100%);
+  color: #fff;
+  padding: 60px 68px;
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  gap: 40px;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: {{ accent }};
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 16px;
+}
+.kicker {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: {{ highlight }};
+  text-transform: uppercase;
+}
+.icon { font-size: 54px; line-height: 1; margin-top: 18px; }
+.title {
+  font-size: 62px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  color: #fff;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.subtitle {
+  font-size: 23px;
+  font-weight: 500;
+  color: {{ highlight }};
+  margin-top: 14px;
+  line-height: 1.42;
+  max-width: 640px;
+}
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  border-left: 1px solid {{ accent }}44;
+  padding-left: 34px;
+}
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.dot {
+  width: 9px; height: 9px;
+  background: {{ accent }};
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.stat-text {
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+</style>
+</head>
+<body>
+  <div class="left">
+    <div>
+      <div class="kicker">{{ kicker or "NOTE" }}</div>
+      {% if icon %}<div class="icon">{{ icon }}</div>{% endif %}
+    </div>
+    <div>
+      <div class="title">{{ title }}</div>
+      {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+  </div>
+  <div class="right">
+    {% for b in badges %}
+    <div class="stat"><span class="dot"></span><span class="stat-text">{{ b }}</span></div>
+    {% endfor %}
+  </div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: linear-gradient(160deg, {{ base }} 0%, #050510 100%);
+  color: #fff;
+  padding: 52px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.subtitle {
+  font-size: 18px;
+  color: {{ highlight }};
+  font-weight: 500;
+  margin-top: 4px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 72px 1fr;
+  gap: 18px;
+  align-items: stretch;
+  flex: 1;
+  margin-top: 6px;
+}
+.col {
+  padding: 26px 28px;
+  border-radius: 10px;
+  border: 1px solid {{ accent }}44;
+  background: {{ accent }}0e;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.col.emph { border-color: {{ accent }}; background: {{ accent }}1c; }
+.col-label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: {{ highlight }};
+}
+.col-title {
+  font-size: 30px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+.col-desc {
+  font-size: 16px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.col-bullets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+.bullet {
+  display: grid;
+  grid-template-columns: 6px 1fr;
+  gap: 12px;
+  align-items: start;
+}
+.bullet::before {
+  content: "";
+  width: 6px; height: 6px;
+  background: {{ accent }};
+  border-radius: 50%;
+  margin-top: 10px;
+}
+.bullet-text {
+  font-size: 16px;
+  color: #e5e7eb;
+  line-height: 1.5;
+}
+.vs {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+.vs-line {
+  width: 1px; flex: 1; background: {{ accent }}44;
+}
+.vs-text {
+  font-size: 20px;
+  font-weight: 900;
+  color: {{ accent }};
+  letter-spacing: 0.1em;
+}
+</style>
+</head>
+<body>
+  <div>
+    <div class="title">{{ title }}</div>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+  </div>
+  <div class="grid">
+    <div class="col {% if left.emph %}emph{% endif %}">
+      {% if left.label %}<div class="col-label">{{ left.label }}</div>{% endif %}
+      <div class="col-title">{{ left.title }}</div>
+      {% if left.desc %}<div class="col-desc">{{ left.desc }}</div>{% endif %}
+      {% if left.bullets %}
+      <div class="col-bullets">
+        {% for b in left.bullets %}<div class="bullet"><div class="bullet-text">{{ b }}</div></div>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="vs">
+      <div class="vs-line"></div>
+      <div class="vs-text">VS</div>
+      <div class="vs-line"></div>
+    </div>
+    <div class="col {% if right.emph %}emph{% endif %}">
+      {% if right.label %}<div class="col-label">{{ right.label }}</div>{% endif %}
+      <div class="col-title">{{ right.title }}</div>
+      {% if right.desc %}<div class="col-desc">{{ right.desc }}</div>{% endif %}
+      {% if right.bullets %}
+      <div class="col-bullets">
+        {% for b in right.bullets %}<div class="bullet"><div class="bullet-text">{{ b }}</div></div>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>

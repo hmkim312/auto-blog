@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: linear-gradient(160deg, {{ base }} 0%, #050510 100%);
+  color: #fff;
+  padding: 52px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+.top {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  border-bottom: 1px solid {{ accent }}55;
+  padding-bottom: 20px;
+}
+.num {
+  font-size: 84px;
+  font-weight: 900;
+  color: {{ accent }};
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+.heads { flex: 1; }
+.title {
+  font-size: 40px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.subtitle {
+  font-size: 20px;
+  color: {{ highlight }};
+  margin-top: 6px;
+  font-weight: 500;
+}
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+.row {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  gap: 20px;
+  align-items: center;
+  padding: 16px 22px;
+  background: {{ accent }}12;
+  border-left: 3px solid {{ accent }};
+  border-radius: 4px;
+}
+.row-icon {
+  font-size: 38px;
+  text-align: center;
+  line-height: 1;
+}
+.row-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.row-desc {
+  font-size: 16px;
+  color: #cbd5e1;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: {{ highlight }};
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.footer-bar { height: 2px; background: {{ accent }}; flex: 1; }
+.footer-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  border: 1px solid {{ accent }}88;
+  color: #fff;
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+}
+</style>
+</head>
+<body>
+  <div class="top">
+    {% if num %}<div class="num">{{ num }}</div>{% endif %}
+    <div class="heads">
+      <div class="title">{{ title }}</div>
+      {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+    </div>
+  </div>
+  <div class="rows">
+    {% for c in cards %}
+    <div class="row">
+      {% if c.icon %}<div class="row-icon">{{ c.icon }}</div>{% else %}<div></div>{% endif %}
+      <div>
+        <div class="row-title">{{ c.title }}</div>
+        {% if c.desc %}<div class="row-desc">{{ c.desc }}</div>{% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% if footer %}
+  <div class="footer">
+    {% if footer.label %}<span>{{ footer.label }}</span>{% endif %}
+    <div class="footer-bar"></div>
+    {% if footer.chips %}
+    <div class="footer-chips">
+      {% for chip in footer.chips %}<span class="chip">{{ chip }}</span>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</body>
+</html>

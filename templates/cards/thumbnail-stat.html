@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: linear-gradient(135deg, {{ base }} 0%, #060614 100%);
+  color: #fff;
+  padding: 60px 68px;
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: 50px;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: {{ accent }};
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-right: 1px solid {{ accent }}33;
+  padding-right: 30px;
+}
+.stat-label {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  color: {{ highlight }};
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.stat-value {
+  font-size: 130px;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+  color: {{ accent }};
+}
+.stat-unit {
+  font-size: 28px;
+  font-weight: 600;
+  color: {{ highlight }};
+  margin-top: 14px;
+  letter-spacing: -0.01em;
+}
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.kicker {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  color: {{ highlight }};
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.title {
+  font-size: 54px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #fff;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+.subtitle {
+  font-size: 21px;
+  font-weight: 500;
+  color: {{ highlight }};
+  margin-top: 18px;
+  line-height: 1.42;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 26px;
+}
+.chip {
+  background: {{ accent }}1F;
+  border: 1px solid {{ accent }}55;
+  color: {{ highlight }};
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+}
+</style>
+</head>
+<body>
+  <div class="left">
+    {% if stat_label %}<div class="stat-label">{{ stat_label }}</div>{% endif %}
+    <div class="stat-value">{{ stat_value }}</div>
+    {% if stat_unit %}<div class="stat-unit">{{ stat_unit }}</div>{% endif %}
+  </div>
+  <div class="right">
+    {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
+    <div class="title">{{ title }}</div>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+    {% if badges %}
+    <div class="badges">
+      {% for b in badges %}<div class="chip">{{ b }}</div>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

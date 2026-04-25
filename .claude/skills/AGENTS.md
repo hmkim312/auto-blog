@@ -10,27 +10,26 @@
 
 | Directory | Purpose |
 |-----------|---------|
-| `blog/` | `/blog <주제>` — 리서치+초안+자동 검수/교정까지 묶은 메타 스킬 (이미지는 수동) |
-| `blog-research/` | `/blog-research <주제> [--profile X]` — Tavily 웹 검색 + 동적 Q&A + 초안 + 이미지 프롬프트 + **이미지 메타 블록** 생성 (현재 주 경로) |
-| `blog-post/` | `/blog-post <주제>` — **DEPRECATED 리다이렉트 shim.** `/blog-research` 로 안내만 한다. 삭제 금지 (호환성) |
+| `blog/` | `/blog [--profile X]` — 주제 탐색+리서치+초안+자동 검수/교정까지 묶은 메타 스킬 (카드 이미지는 수동) |
+| `blog-discover/` | `/blog-discover [--profile X]` — 8개 트렌드 소스에서 주제 후보 10개를 제목만 추려준다 (단독 호출용) |
+| `blog-research/` | `/blog-research [--profile X]` — 주제 탐색 + Tavily 웹 검색 + 동적 Q&A + 초안 + **이미지 메타 블록** 생성 (주 경로) |
 | `blog-review/` | `/blog-review [파일]` — CLAUDE.md 규칙 자가 검수, `--fix` 플래그로 안전 치환 |
-| `blog-images/` | `/blog-images [파일]` — 초안의 `## 이미지 프롬프트` 블록으로 Replicate recraft-v3 AI 일러스트 생성 |
 | `blog-cards/` | `/blog-cards [파일]` — 초안의 `## 이미지 메타` YAML 블록을 HTML 템플릿으로 Playwright 렌더 → 카드형 WebP 생성 |
 
 ## 스킬 간 관계
 
 ```
-blog-research  (Tavily + Q&A → 본문 + 이미지 프롬프트 + 이미지 메타)
+blog-discover  (8 소스 → 후보 10개 제목)        ← 단독 호출 시
+   ↓ 사용자 선택
+blog-research  (주제 탐색 내장 + Tavily + Q&A → 본문 + 이미지 메타)
    ↓ posts/YYYY-MM-DD-slug.md
 blog-review    (규칙 검수 + 교정)
    ↓ 같은 파일 수정
-blog-images    (AI 일러스트)      blog-cards   (카드 템플릿)
-   → posts/images/<slug>/*.webp     → posts/images/<slug>/*.webp
-
-blog-post → (shim, 호출 시 /blog-research 안내만 출력)
+blog-cards     (카드 템플릿)
+   → posts/images/<slug>/*.webp
 ```
 
-순서를 강제하지는 않는다. 사용자가 임의 순서로 호출 가능 (예: 초안 수기 수정 → 카드만). `/blog-images` 와 `/blog-cards` 는 서로 독립이라 병행 사용 가능하지만 출력 파일명이 겹칠 수 있으니 한쪽만 쓰거나 파일명을 분리해 관리한다.
+순서를 강제하지는 않는다. 사용자가 임의 순서로 호출 가능 (예: 초안 수기 수정 → 카드만).
 
 ## For AI Agents
 
@@ -52,14 +51,13 @@ blog-post → (shim, 호출 시 /blog-research 안내만 출력)
 
 ### Internal
 - `../../CLAUDE.md` — 글쓰기 규칙의 기준
-- `../../scripts/generate-images.py` — `blog-images`가 호출
 - `../../scripts/render-cards.py` — `blog-cards`가 호출
 - `../../scripts/tavily-search.py` — `blog-research`가 호출
+- `../../scripts/discover-topics.py` — `blog-discover` / `blog-research` 가 호출
 - `../../templates/cards/*.html` — `blog-cards`가 사용하는 Jinja2 템플릿
 - `../../profiles/<name>.yml` — `blog-research` 가 읽는 필자별 프로파일
 
 ### External
-- `blog-images`: Replicate API, `uv`, `REPLICATE_API_TOKEN`
 - `blog-cards`: Playwright + Chromium (`playwright install chromium` 최초 1회), `uv`
 - `blog-research`: Tavily API(무료 월 1,000건), `uv`, `TAVILY_API_KEY`
 

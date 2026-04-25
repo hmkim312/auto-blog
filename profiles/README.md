@@ -45,4 +45,4 @@
 1. `profiles/<이름>.yml` 생성
 2. 최소 `name`, `niche`, `reader_level` 3개 필드 채움
 3. 필요 시 `persona`/`tone`/`search_bias` 추가
-4. `/blog-research <주제> --profile <이름>` 으로 실행
+4. `/blog-research --profile <이름>` 으로 실행 (주제는 탐색 단계에서 고름. 직접 입력하려면 `/blog-research <주제> --profile <이름>`)

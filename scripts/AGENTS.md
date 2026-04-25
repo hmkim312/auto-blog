@@ -10,7 +10,6 @@
 
 | File | Description |
 |------|-------------|
-| `generate-images.py` | Replicate recraft-v3로 블로그 포스트의 이미지 프롬프트를 실제 이미지(WebP)로 변환. `/blog-images` 스킬이 호출. |
 | `render-cards.py` | 초안의 `## 이미지 메타` YAML 블록을 `templates/cards/` HTML 템플릿으로 Playwright 렌더, Pillow 로 WebP 변환. 1200x630 (DPR 2배), 포스트 내 단일 팔레트 강제. `/blog-cards` 스킬이 호출. |
 | `tavily-search.py` | Tavily 웹 검색 API 어댑터. `BLOG_RESEARCH_SESSION_ID` 기반 세션 카운터로 호출 ≤8 하드 강제. `--dry-run` fixture 지원. 기본 `--max-results 10`. `/blog-research` 스킬이 호출. |
 | `fixtures/tavily-dry-run.json` | `tavily-search.py --dry-run` 이 반환하는 고정 응답. 네트워크 없이 파이프라인 스모크 테스트용. |
@@ -25,7 +24,7 @@
 
 ### Testing Requirements
 - 새 스크립트 추가 후 `python3 -c "import ast; ast.parse(open(...).read())"` 로 최소 구문 검증.
-- Replicate 등 유료 API 호출 전, 파싱/전처리 단계를 API 없이 단독 실행 가능하도록 분리해 테스트.
+- 외부 API 호출 전, 파싱/전처리 단계를 API 없이 단독 실행 가능하도록 분리해 테스트.
 
 ### Common Patterns
 - 인자 파서: `argparse` (표준 라이브러리).
@@ -41,7 +40,6 @@
 
 ### External
 - `uv` (필수 실행기)
-- `replicate`, `python-dotenv`, `requests` — `generate-images.py` 의존
 - `requests`, `python-dotenv` — `tavily-search.py` 의존 (Tavily SDK 없이 HTTP 직접 호출)
 - `playwright` + Chromium, `jinja2`, `pyyaml`, `pillow` — `render-cards.py` 의존 (Chromium 은 `playwright install chromium` 으로 최초 1회 설치)
 

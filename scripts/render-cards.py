@@ -81,16 +81,26 @@ async def main_async(md_path: Path, only: str | None) -> None:
     out_dir = POSTS_DIR / "images" / slug
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # 포스트 단위 단일 팔레트: top-level `palette` 우선, 없으면 첫 블록의 palette, 없으면 indigo
+    # 포스트 단위 단일 팔레트: top-level `palette` 우선
+    # - dict 형태 {base, accent, highlight} 면 그대로 사용 (AI가 글 내용 보고 정한 색상)
+    # - 문자열이면 PALETTES 프리셋 키로 lookup (하위 호환)
     post_palette = meta.pop("palette", None)
     if not post_palette:
         for spec in meta.values():
             if isinstance(spec, dict) and spec.get("palette"):
                 post_palette = spec["palette"]
                 break
-    post_palette = post_palette or "indigo"
-    palette_colors = PALETTES.get(post_palette, PALETTES["indigo"])
-    print(f"[palette] '{post_palette}' 을 모든 블록에 적용 (포스트 내 단일 팔레트)")
+    if isinstance(post_palette, dict):
+        palette_colors = {
+            "base": post_palette.get("base", "#1e1b4b"),
+            "accent": post_palette.get("accent", "#6366f1"),
+            "highlight": post_palette.get("highlight", "#a78bfa"),
+        }
+        print(f"[palette] custom {palette_colors}")
+    else:
+        key = post_palette or "indigo"
+        palette_colors = PALETTES.get(key, PALETTES["indigo"])
+        print(f"[palette] preset '{key}' 적용")
 
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATES)),

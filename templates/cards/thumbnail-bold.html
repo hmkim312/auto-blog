@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: radial-gradient(circle at 30% 30%, {{ base }} 0%, #060614 80%);
+  color: #fff;
+  padding: 80px 90px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  text-align: left;
+}
+body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 60%, {{ accent }}1A 100%);
+  pointer-events: none;
+}
+.kicker {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  color: {{ highlight }};
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.icon { font-size: 64px; line-height: 1; margin-bottom: 22px; }
+.title {
+  font-size: 86px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
+  color: #fff;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  max-width: 1000px;
+}
+.subtitle {
+  font-size: 26px;
+  font-weight: 500;
+  color: {{ highlight }};
+  margin-top: 26px;
+  line-height: 1.4;
+  max-width: 900px;
+}
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 42px;
+}
+.chip {
+  background: {{ accent }}22;
+  border: 1px solid {{ accent }}55;
+  color: {{ highlight }};
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+</style>
+</head>
+<body>
+  {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
+  {% if icon %}<div class="icon">{{ icon }}</div>{% endif %}
+  <div class="title">{{ title }}</div>
+  {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+  {% if badges %}
+  <div class="badges">
+    {% for b in badges %}<div class="chip">{{ b }}</div>{% endfor %}
+  </div>
+  {% endif %}
+</body>
+</html>

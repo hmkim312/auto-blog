@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: linear-gradient(155deg, {{ base }} 0%, #060614 100%);
+  color: #fff;
+  padding: 56px 68px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+body::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  background: {{ accent }};
+}
+.header { margin-bottom: 36px; }
+.kicker {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  color: {{ highlight }};
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.title {
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  color: #fff;
+  word-break: keep-all;
+}
+.subtitle {
+  font-size: 19px;
+  color: {{ highlight }};
+  margin-top: 12px;
+  line-height: 1.45;
+}
+.timeline {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat({{ steps|length }}, 1fr);
+  gap: 24px;
+  position: relative;
+  padding-top: 30px;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  top: 56px;
+  left: 24px; right: 24px;
+  height: 2px;
+  background: {{ accent }}55;
+  z-index: 0;
+}
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  z-index: 1;
+}
+.marker {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  background: {{ base }};
+  border: 2px solid {{ accent }};
+  color: {{ accent }};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  flex-shrink: 0;
+}
+.step-title {
+  font-size: 21px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+  word-break: keep-all;
+}
+.step-desc {
+  font-size: 15px;
+  color: {{ highlight }};
+  line-height: 1.5;
+  word-break: keep-all;
+}
+</style>
+</head>
+<body>
+  <div class="header">
+    {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
+    <div class="title">{{ title }}</div>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+  </div>
+  <div class="timeline">
+    {% for s in steps %}
+    <div class="step">
+      <div class="marker">{{ s.marker }}</div>
+      <div class="step-title">{{ s.title }}</div>
+      {% if s.desc %}<div class="step-desc">{{ s.desc }}</div>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</body>
+</html>

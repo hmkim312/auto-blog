@@ -1,0 +1,36 @@
+# 필자 프로파일 템플릿. profiles/<your-name>.yml 로 복사해 채워 쓴다.
+# 채워진 .yml 은 .gitignore 로 추적 제외 (개인 정보 보호). example.yml 만 추적.
+# /blog-research --profile <your-name> 으로 호출.
+
+# 프로파일 이름. 파일명과 동일하게.
+name: example
+
+# 한 줄로 정리한 글의 컨셉/포지셔닝. 글이 다룰 영역 + 어떤 톤인지.
+# 비어 있으면 기본값(컨셉 없음) 으로 동작.
+niche: ""
+
+# 글의 1차 독자가 누구인지. AI 가 본문 난이도·용어 선택의 기준으로 삼는다.
+# 비어 있으면 "개발 입문자 (6개월~1년)" 기본값 (CLAUDE.md 기본).
+reader_level: ""
+
+# 1인칭 자기 소개 1~3 문장. AI 가 글의 시점·관점·말투를 잡는 데 쓴다.
+# "나는 ~ 다. ~ 를 ~ 에게 전달하는 걸 목표로 한다." 식.
+persona: |
+
+# 문체와 길이 가이드. 평서체/존댓말, 문장 길이 선호, 비유 활용 정도 등.
+tone: "평서체. 짧은 문장."
+
+# 발행 주기. 강제 사항은 아니고 컨텍스트로만 사용.
+publish_rhythm: "주 1~2회"
+
+# 주로 다루고 싶은 주제. /blog-discover 가 이 리스트와 가까운 후보를 가산점.
+preferred_topics: []
+
+# 피하고 싶은 주제. discover·research 에서 자동 제외.
+avoid_topics: []
+
+# Tavily 검색 가중치. 모두 선택. 빼면 글로벌 기본값.
+search_bias:
+  region: KR        # Tavily 검색 지역
+  language: ko      # 검색어 언어
+  recency_days: 180 # 결과 신선도 기준 일수

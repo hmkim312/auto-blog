@@ -1,3 +1,5 @@
 posts/
 .omc/
 .env
+profiles/*.yml
+!profiles/example.yml

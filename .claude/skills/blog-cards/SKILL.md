@@ -24,49 +24,29 @@ Chromium 을 ~/Library/Caches/ms-playwright 에 설치한다. 한 번만 하면 
 
 ## 초안 메타 블록 형식
 
-초안 파일 끝(`## 태그` 다음)에 아래 블록을 추가한다.
+초안 끝(`## 태그` 다음)에 아래 골격을 둔다. **구체값(hex·문구·이모지)은 매번 글에 맞춰 새로 정한다 — 아래 placeholder 그대로 복사 금지**.
 
-```markdown
+```yaml
 ## 이미지 메타
 
 palette:
-  base: "#0F1419"
-  accent: "#FF8A3D"
-  highlight: "#F5D9B5"
+  base: "#<글 톤에 맞는 어두운 hex>"
+  accent: "#<감정·강조 색>"
+  highlight: "#<base 위에서 떠 보이는 밝은 색>"
 
 thumb:
-  template: thumbnail
-  icon: "🔒"
-  title: "제목 (대)"
-  subtitle: "부제목 한 줄"
-  badges: ["배지1", "배지2", "배지3"]
+  template: <thumbnail|thumbnail-bold|thumbnail-stat|thumbnail-quote>
+  # 템플릿별 필드는 아래 "템플릿 12종" 절 참조
 
 section-1:
-  template: section-hero
-  title: "섹션 제목"
-  subtitle: "부제"
-  cards:
-    - icon: "⏱️"
-      title: "카드1"
-      desc: "짧은 설명"
-    - icon: "📅"
-      title: "카드2"
-      desc: "짧은 설명"
-    - icon: "🔄"
-      title: "카드3"
-      desc: "짧은 설명"
-  footer:
-    label: "요약"
-    chips: ["칩1", "칩2", "칩3"]
+  template: <section-* 8종 중 하나>
+  # 필드 동일
 
 section-2:
-  template: section-simple
-  title: "경험 섹션 제목"
-  subtitle: "부제"
-  badges: ["배지1", "배지2"]
+  template: <section-* 8종 중 하나>
 ```
 
-블록 이름(`thumb`, `section-1` ~ `section-N`, 최대 `section-4`)이 출력 파일명이 된다 (`posts/images/<slug>/<key>.webp`). 카드 총 수는 1+N, 캡 5장. 본문 H2 수에 맞춰 동적으로 정한다 (마무리 H2 제외).
+블록 이름(`thumb`, `section-1` ~ `section-N`, 최대 `section-4`)이 출력 파일명이 된다 (`posts/images/<slug>/<key>.webp`). 카드 총 수 1+N, 캡 5장. 본문 H2 수에 맞춰 동적 (마무리 H2 제외).
 
 ## 템플릿 12종 (썸네일 4 + 섹션 8)
 

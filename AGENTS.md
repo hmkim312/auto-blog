@@ -31,7 +31,7 @@ Claude Code 기반 티스토리 블로그 글 자동 생성 파이프라인. 주
 /blog-cards                          →  HTML 카드 템플릿 (Playwright 렌더, 본문 H2 수에 맞춰 동적, 캡 5장)
 
 # 단계별 실행도 가능
-/blog-discover [--profile X]         →  8개 소스에서 주제 후보 10개 제목 (단독)
+/blog-discover [--profile X]         →  13개 소스(트렌드+long-tail)에서 주제 후보 10개 제목 (단독)
 /blog-research [--profile X]         →  주제 탐색 내장 + posts/YYYY-MM-DD-slug.md 초안 (Tavily + 동적 Q&A + 이미지 메타 블록)
 /blog-review                         →  CLAUDE.md 규칙으로 검수 (--fix 옵션)
 /blog-cards                          →  초안의 `## 이미지 메타` 블록 → 카드형 WebP

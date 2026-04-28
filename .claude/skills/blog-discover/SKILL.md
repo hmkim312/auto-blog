@@ -1,6 +1,6 @@
 ---
 name: blog-discover
-description: AI 트렌드 소스(HN·GitHub·arXiv·AI 랩 블로그·GeekNews)에서 최근 항목을 모아 블로그 주제 후보 10개를 제목만 추려준다
+description: AI 트렌드 + 문제 해결형 long-tail 소스(HN·GitHub·arXiv·AI 랩 블로그·GeekNews·Reddit·Stack Overflow·GitHub Issues)에서 최근 항목을 모아 블로그 주제 후보 10개를 제목만 추려준다
 argument-hint: "[--profile <name>]"
 ---
 
@@ -35,17 +35,24 @@ stdout 으로 JSON 배열이 나온다. 각 항목 형식:
 {"source":"hackernews","title":"...","url":"...","summary":"...","published":"..."}
 ```
 
-소스 목록: `hackernews`, `github_trending_python`, `github_trending_typescript`, `arxiv_cs_ai`, `openai_blog`, `anthropic_news`, `deepmind_blog`, `geeknews`. 일부 소스가 실패해도 stderr 경고만 남고 나머지는 정상 반환.
+소스 목록 (총 13개):
+
+- 트렌드/뉴스성 (8개): `hackernews`, `github_trending_python`, `github_trending_typescript`, `arxiv_cs_ai`, `openai_blog`, `anthropic_news`, `deepmind_blog`, `geeknews`
+- 문제 해결형 long-tail (5개): `reddit_claudeai`, `reddit_cursor`, `reddit_localllama`, `stackoverflow_langchain`, `github_issues_langchain-ai_langchain`
+
+일부 소스가 실패해도 stderr 경고만 남고 나머지는 정상 반환. long-tail 소스는 사용자가 실제 검색창에 칠 만한 질문 형태(`Why is …`, `How to …`, `… not working`)가 자주 나오므로, 트래픽 누적이 잘 되는 글감 풀이다.
 
 ### 3단계: LLM 점수화 + 추리기
 
 JSON 을 받아서 한국어 입문자 독자 기준으로 평가한다. 평가 기준 (가중치 큰 순):
 
-1. **신선도**: 최근 7일 내 항목 가산. 30일 초과면 감점.
-2. **입문자 적합성**: 일반인이 들어도 호기심 가질 만한가? 너무 학술적·논문 raw 면 감점.
-3. **글로 풀 만한 거리**: 블로그 한 편(3,500자) 분량의 줄거리가 그려지는가?
-4. **한국 검색 수요**: GeekNews 에 동시 등장하면 가산점. 영문 전용 학술 토픽이면 감점.
-5. **프로파일 적합성**: 프로파일이 있으면 `interests` / `niche` 와 겹치는지.
+1. **문제 해결형 long-tail (가장 큰 가산점)**: 검색 의도가 명확한 도구·설정·트러블슈팅 항목이면 강하게 가산. Reddit/Stack Overflow/GitHub Issues 출처거나, 제목이 `Why … not working`, `How to …`, `… error`, `… 안 될 때` 형태면 자동 가산점. 트래픽 누적이 잘 되는 글감이라 후보 10개 중 **최소 4개**는 이 카테고리에서 뽑는다.
+2. **신선도**: 최근 7일 내 항목 가산. 30일 초과면 감점. 단 long-tail 질문은 1년 이내까지도 유효.
+3. **입문자 적합성**: 일반인이 들어도 호기심 가질 만한가? 너무 학술적·논문 raw 면 감점.
+4. **글로 풀 만한 거리**: 블로그 한 편(3,500자) 분량의 줄거리가 그려지는가?
+5. **한국 검색 수요**: GeekNews 에 동시 등장하면 가산점. 영문 전용 학술 토픽이면 감점. (영어권 long-tail 질문은 한국어로 풀어 쓰면 검색 수요 있음 — 감점 대상 아님.)
+6. **빅 키워드 회피**: `RAG`, `LLM`, `agent` 같은 광역 단어만 들어간 항목은 감점 (신생 도메인이 경쟁 못 이김). 구체 도구명·문제 상황이 들어간 항목 우선.
+7. **프로파일 적합성**: 프로파일이 있으면 `interests` / `niche` 와 겹치는지.
 
 내부 처리 후 **중복 토픽 병합** (같은 주제가 여러 소스에 있으면 한 줄로):
 - 예: "Claude 4.7 Opus 발표" 가 anthropic_news 와 hackernews 양쪽에 있으면 하나로.
@@ -90,7 +97,9 @@ BLOG_RESEARCH_SESSION_ID=discover-$(date +%s)-$$ uv run scripts/tavily-search.py
 - 후보 제목은 **사용자가 그대로 `/blog` 에 넣을 수 있는 형태**로 정제. 예:
   - 원본: "Anthropic releases Claude 4.7 with extended thinking" 
   - 정제: "Claude 4.7 — extended thinking이 바꾸는 것"
+  - long-tail 예: "Why does Cursor keep looping on tool calls?" → "Cursor 에이전트가 무한 루프에 빠질 때 점검할 것"
 - 정제는 한국어 + 사용자 톤. CLAUDE.md 의 제목 규칙(템플릿 공식 금지) 따르되 너무 다듬지 말고 키워드성을 살린다.
+- **저작권 가드 — 원문 직역 금지**. 영어권 소스(Reddit/SO/GitHub Issues/HN 등) 는 *주제·문제 지점*만 추출해 한국어로 새로 정제한다. 원문 제목·요약을 그대로 번역해 옮기지 않는다 (사실·아이디어는 보호 대상 아니지만 표현은 보호됨). 본문은 어차피 `/blog` 가 Tavily 로 다시 검색해 새로 작성하므로 안전하다.
 
 ## 에러 대응
 

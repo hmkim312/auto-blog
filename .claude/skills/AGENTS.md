@@ -19,7 +19,7 @@
 ## 스킬 간 관계
 
 ```
-blog-discover  (8 소스 → 후보 10개 제목)        ← 단독 호출 시
+blog-discover  (13 소스 → 후보 10개 제목)       ← 단독 호출 시
    ↓ 사용자 선택
 blog-research  (주제 탐색 내장 + Tavily + Q&A → 본문 + 이미지 메타)
    ↓ posts/YYYY-MM-DD-slug.md

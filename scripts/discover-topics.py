@@ -151,6 +151,81 @@ def fetch_rss(source: str, url: str, limit: int = 15) -> list[Item]:
     return items
 
 
+def fetch_reddit(subreddit: str, limit: int = 15) -> list[Item]:
+    """Reddit 서브레딧 hot RSS. UA 헤더 없이는 429 가 나서 requests 로 받아 feedparser 에 넘긴다."""
+    url = f"https://www.reddit.com/r/{subreddit}/hot/.rss?limit={limit}"
+    r = _get(url)
+    r.raise_for_status()
+    feed = feedparser.parse(r.content)
+    if feed.bozo and not feed.entries:
+        raise RuntimeError(f"reddit RSS parse failed: {feed.bozo_exception}")
+    items: list[Item] = []
+    for e in feed.entries[:limit]:
+        summary = (getattr(e, "summary", "") or "")[:240]
+        items.append(
+            Item(
+                source=f"reddit_{subreddit.lower()}",
+                title=getattr(e, "title", "") or "",
+                url=getattr(e, "link", "") or "",
+                summary=summary,
+                published=getattr(e, "published", "") or getattr(e, "updated", ""),
+            )
+        )
+    return items
+
+
+def fetch_stackoverflow(tag: str, limit: int = 15) -> list[Item]:
+    """Stack Overflow 태그 최신 질문 RSS. 질문 제목 자체가 long-tail 검색어 후보."""
+    url = f"https://stackoverflow.com/feeds/tag?tagnames={tag}&sort=newest"
+    feed = feedparser.parse(url)
+    if feed.bozo and not feed.entries:
+        raise RuntimeError(f"SO RSS parse failed: {feed.bozo_exception}")
+    items: list[Item] = []
+    for e in feed.entries[:limit]:
+        summary = (getattr(e, "summary", "") or "")[:240]
+        items.append(
+            Item(
+                source=f"stackoverflow_{tag}",
+                title=getattr(e, "title", "") or "",
+                url=getattr(e, "link", "") or "",
+                summary=summary,
+                published=getattr(e, "published", "") or getattr(e, "updated", ""),
+            )
+        )
+    return items
+
+
+def fetch_github_issues(repo: str, limit: int = 10) -> list[Item]:
+    """인기 레포의 댓글 많은 오픈 이슈. 사용자가 실제로 막힌 지점을 잡는다. repo 는 owner/name."""
+    url = (
+        f"https://api.github.com/repos/{repo}/issues"
+        "?state=open&sort=comments&direction=desc&per_page=30"
+    )
+    r = _get(url)
+    r.raise_for_status()
+    issues = r.json()
+    items: list[Item] = []
+    safe_repo = repo.replace("/", "_")
+    for issue in issues:
+        if issue.get("pull_request"):
+            continue
+        items.append(
+            Item(
+                source=f"github_issues_{safe_repo}",
+                title=issue.get("title") or "",
+                url=issue.get("html_url") or "",
+                summary=(
+                    f"{issue.get('comments', 0)} comments · "
+                    f"reactions {issue.get('reactions', {}).get('total_count', 0)}"
+                ),
+                published=issue.get("created_at", ""),
+            )
+        )
+        if len(items) >= limit:
+            break
+    return items
+
+
 SOURCES: list[tuple[str, Callable[[], list[Item]]]] = [
     ("hackernews", lambda: fetch_hn(hours=48, limit=30)),
     ("github_trending_python", lambda: fetch_github_trending("python", limit=15)),
@@ -160,6 +235,12 @@ SOURCES: list[tuple[str, Callable[[], list[Item]]]] = [
     ("anthropic_news", lambda: fetch_anthropic_news(limit=10)),
     ("deepmind_blog", lambda: fetch_rss("deepmind_blog", "https://blog.google/technology/google-deepmind/rss/", limit=10)),
     ("geeknews", lambda: fetch_rss("geeknews", "https://news.hada.io/rss/news", limit=20)),
+    # long-tail / 문제 해결형 소스 — 검색 의도 명확한 질문 글감 발굴용
+    ("reddit_claudeai", lambda: fetch_reddit("ClaudeAI", limit=15)),
+    ("reddit_cursor", lambda: fetch_reddit("cursor", limit=15)),
+    ("reddit_localllama", lambda: fetch_reddit("LocalLLaMA", limit=15)),
+    ("stackoverflow_langchain", lambda: fetch_stackoverflow("langchain", limit=15)),
+    ("github_issues_langchain", lambda: fetch_github_issues("langchain-ai/langchain", limit=10)),
 ]
 
 

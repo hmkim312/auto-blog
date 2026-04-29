@@ -12,78 +12,83 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(135deg, {{ base }} 0%, #060614 100%);
+  background: {{ base }};
   color: #fff;
-  padding: 70px 88px;
+  padding: 96px 90px 96px 96px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
   position: relative;
+  overflow: hidden;
 }
 body::before {
   content: "";
   position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 5px;
+  left: 56px;
+  top: 100px; bottom: 100px;
+  width: 4px;
   background: {{ accent }};
 }
-.icon-block {
-  width: 96px; height: 96px;
-  border-radius: 24px;
-  background: {{ accent }}22;
-  border: 2px solid {{ accent }}88;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 48px;
-  margin-bottom: 28px;
+.glow {
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, {{ accent }}1c 0%, transparent 70%);
+}
+.icon-mark {
+  font-size: 22px;
+  margin-bottom: 14px;
+  opacity: 0.95;
 }
 .tag {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.32em;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.46em;
   color: {{ accent }};
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin-bottom: 22px;
 }
 .title {
-  font-size: 56px;
+  font-size: 50px;
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.028em;
   line-height: 1.1;
   color: #fff;
   word-break: keep-all;
-  max-width: 1000px;
+  max-width: 980px;
 }
 .subtitle {
-  font-size: 23px;
+  font-size: 20px;
   font-weight: 500;
   color: {{ highlight }};
   margin-top: 22px;
   line-height: 1.45;
   max-width: 950px;
+  word-break: keep-all;
 }
 .attribution {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.32em;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.42em;
   color: {{ highlight }};
   text-transform: uppercase;
-  margin-top: 32px;
+  margin-top: 36px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
 }
-.attribution::before {
+.attribution::after {
   content: "";
-  width: 28px; height: 1px;
+  width: 32px;
+  height: 1px;
   background: {{ accent }};
 }
 </style>
 </head>
 <body>
-  {% if icon %}<div class="icon-block">{{ icon }}</div>{% endif %}
+  <div class="glow"></div>
+  {% if icon %}<div class="icon-mark">{{ icon }}</div>{% endif %}
   {% if tag %}<div class="tag">{{ tag }}</div>{% endif %}
   <div class="title">{{ title }}</div>
   {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}

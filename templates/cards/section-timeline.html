@@ -12,31 +12,36 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(155deg, {{ base }} 0%, #060614 100%);
+  background: {{ base }};
   color: #fff;
-  padding: 56px 68px;
+  padding: 58px 64px;
   display: flex;
   flex-direction: column;
   position: relative;
+  overflow: hidden;
 }
-body::before {
-  content: "";
+.glow {
   position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 5px;
-  background: {{ accent }};
+  bottom: -100px; left: -100px;
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, {{ accent }}1f 0%, transparent 70%);
+  pointer-events: none;
 }
-.header { margin-bottom: 36px; }
+.header {
+  margin-bottom: 36px;
+  position: relative;
+  z-index: 1;
+}
 .kicker {
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 0.32em;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.46em;
   color: {{ highlight }};
   text-transform: uppercase;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 .title {
-  font-size: 42px;
+  font-size: 40px;
   font-weight: 800;
   letter-spacing: -0.025em;
   line-height: 1.12;
@@ -44,59 +49,68 @@ body::before {
   word-break: keep-all;
 }
 .subtitle {
-  font-size: 19px;
+  font-size: 17px;
   color: {{ highlight }};
   margin-top: 12px;
   line-height: 1.45;
+  font-weight: 500;
 }
 .timeline {
   flex: 1;
   display: grid;
   grid-template-columns: repeat({{ steps|length }}, 1fr);
-  gap: 24px;
+  gap: 14px;
   position: relative;
-  padding-top: 30px;
+  padding-top: 16px;
+  z-index: 1;
 }
 .timeline::before {
   content: "";
   position: absolute;
-  top: 56px;
-  left: 24px; right: 24px;
-  height: 2px;
-  background: {{ accent }}55;
+  top: 30px;
+  left: 4%; right: 4%;
+  border-top: 1.5px dashed {{ accent }}88;
   z-index: 0;
 }
 .step {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  align-items: flex-start;
+  gap: 12px;
   position: relative;
   z-index: 1;
 }
-.marker {
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  background: {{ base }};
-  border: 2px solid {{ accent }};
-  color: {{ accent }};
-  display: flex;
+.marker-box {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: {{ base }};
+  border: 1.5px solid {{ accent }};
+  font-size: 12px;
   font-weight: 800;
-  font-size: 17px;
-  letter-spacing: -0.01em;
-  flex-shrink: 0;
+  color: {{ accent }};
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  position: relative;
+  z-index: 2;
+}
+.marker-box::before {
+  content: "";
+  width: 6px; height: 6px;
+  background: {{ accent }};
 }
 .step-title {
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 700;
   color: #fff;
-  letter-spacing: -0.02em;
-  line-height: 1.18;
+  letter-spacing: -0.015em;
+  line-height: 1.22;
   word-break: keep-all;
+  margin-top: 4px;
 }
 .step-desc {
-  font-size: 15px;
+  font-size: 13px;
   color: {{ highlight }};
   line-height: 1.5;
   word-break: keep-all;
@@ -104,6 +118,7 @@ body::before {
 </style>
 </head>
 <body>
+  <div class="glow"></div>
   <div class="header">
     {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
     <div class="title">{{ title }}</div>
@@ -112,7 +127,7 @@ body::before {
   <div class="timeline">
     {% for s in steps %}
     <div class="step">
-      <div class="marker">{{ s.marker }}</div>
+      <div class="marker-box">{{ s.marker }}</div>
       <div class="step-title">{{ s.title }}</div>
       {% if s.desc %}<div class="step-desc">{{ s.desc }}</div>{% endif %}
     </div>

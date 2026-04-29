@@ -12,105 +12,109 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(160deg, {{ base }} 0%, #050510 100%);
+  background: {{ base }};
   color: #fff;
-  padding: 52px 60px;
+  padding: 50px 60px 44px 60px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
+  position: relative;
+  overflow: hidden;
 }
 .title {
   font-size: 36px;
   font-weight: 800;
   color: #fff;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.022em;
   line-height: 1.15;
   word-break: keep-all;
-  overflow-wrap: break-word;
 }
 .subtitle {
-  font-size: 18px;
+  font-size: 16px;
   color: {{ highlight }};
   font-weight: 500;
-  margin-top: 4px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 72px 1fr;
-  gap: 18px;
-  align-items: stretch;
-  flex: 1;
   margin-top: 6px;
+  line-height: 1.45;
+}
+.split {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+}
+.split::before {
+  content: "";
+  position: absolute;
+  top: 24px; bottom: 12px;
+  left: 50%;
+  width: 1px;
+  background: {{ accent }}66;
+  transform: translateX(-50%);
 }
 .col {
-  padding: 26px 28px;
-  border-radius: 10px;
-  border: 1px solid {{ accent }}44;
-  background: {{ accent }}0e;
+  padding: 32px 30px 16px 30px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
+  position: relative;
 }
-.col.emph { border-color: {{ accent }}; background: {{ accent }}1c; }
+.col.left { padding-right: 50px; }
+.col.right { padding-left: 50px; }
 .col-label {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  position: absolute;
+  top: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.42em;
   color: {{ highlight }};
+  text-transform: uppercase;
+  background: {{ base }};
+  padding: 6px 10px 6px 0;
+  line-height: 1;
+}
+.col.left .col-label { left: 30px; }
+.col.right .col-label { left: 50px; padding: 6px 10px; }
+.col.emph .col-label {
+  color: {{ accent }};
 }
 .col-title {
   font-size: 30px;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.02em;
-  line-height: 1.15;
+  line-height: 1.12;
+  word-break: keep-all;
+}
+.col.emph .col-title {
+  color: {{ accent }};
 }
 .col-desc {
-  font-size: 16px;
+  font-size: 15px;
   color: #cbd5e1;
   line-height: 1.5;
   font-weight: 500;
+  word-break: keep-all;
 }
 .col-bullets {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 7px;
+  margin-top: 6px;
 }
 .bullet {
-  display: grid;
-  grid-template-columns: 6px 1fr;
-  gap: 12px;
-  align-items: start;
+  font-size: 15px;
+  color: #e5e7eb;
+  line-height: 1.45;
+  padding-left: 18px;
+  position: relative;
+  word-break: keep-all;
 }
 .bullet::before {
   content: "";
-  width: 6px; height: 6px;
+  position: absolute;
+  left: 0; top: 11px;
+  width: 10px; height: 1px;
   background: {{ accent }};
-  border-radius: 50%;
-  margin-top: 10px;
-}
-.bullet-text {
-  font-size: 16px;
-  color: #e5e7eb;
-  line-height: 1.5;
-}
-.vs {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-}
-.vs-line {
-  width: 1px; flex: 1; background: {{ accent }}44;
-}
-.vs-text {
-  font-size: 20px;
-  font-weight: 900;
-  color: {{ accent }};
-  letter-spacing: 0.1em;
 }
 </style>
 </head>
@@ -119,29 +123,24 @@ body {
     <div class="title">{{ title }}</div>
     {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
   </div>
-  <div class="grid">
-    <div class="col {% if left.emph %}emph{% endif %}">
+  <div class="split">
+    <div class="col left {% if left.emph %}emph{% endif %}">
       {% if left.label %}<div class="col-label">{{ left.label }}</div>{% endif %}
       <div class="col-title">{{ left.title }}</div>
       {% if left.desc %}<div class="col-desc">{{ left.desc }}</div>{% endif %}
       {% if left.bullets %}
       <div class="col-bullets">
-        {% for b in left.bullets %}<div class="bullet"><div class="bullet-text">{{ b }}</div></div>{% endfor %}
+        {% for b in left.bullets %}<div class="bullet">{{ b }}</div>{% endfor %}
       </div>
       {% endif %}
     </div>
-    <div class="vs">
-      <div class="vs-line"></div>
-      <div class="vs-text">VS</div>
-      <div class="vs-line"></div>
-    </div>
-    <div class="col {% if right.emph %}emph{% endif %}">
+    <div class="col right {% if right.emph %}emph{% endif %}">
       {% if right.label %}<div class="col-label">{{ right.label }}</div>{% endif %}
       <div class="col-title">{{ right.title }}</div>
       {% if right.desc %}<div class="col-desc">{{ right.desc }}</div>{% endif %}
       {% if right.bullets %}
       <div class="col-bullets">
-        {% for b in right.bullets %}<div class="bullet"><div class="bullet-text">{{ b }}</div></div>{% endfor %}
+        {% for b in right.bullets %}<div class="bullet">{{ b }}</div>{% endfor %}
       </div>
       {% endif %}
     </div>

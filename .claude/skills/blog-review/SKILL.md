@@ -6,6 +6,8 @@ argument-hint: [파일경로] [--fix]
 
 블로그 초안을 CLAUDE.md 규칙에 맞춰 검수하는 스킬.
 
+> **권장 모델:** Sonnet 4.6. 결정론 체크 + LLM 판단 모두 Sonnet으로 충분. Opus면 `/model sonnet` 으로 전환 권장.
+
 ## 사용법
 
 ```

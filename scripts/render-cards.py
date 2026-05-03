@@ -111,7 +111,7 @@ async def main_async(md_path: Path, only: str | None) -> None:
 
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
-        context = await browser.new_context(device_scale_factor=2)
+        context = await browser.new_context(device_scale_factor=1)
         page = await context.new_page()
         for name, spec in meta.items():
             if only and only != name:

@@ -3,3 +3,4 @@ posts/
 .env
 profiles/*.yml
 !profiles/example.yml
+internal-links.md

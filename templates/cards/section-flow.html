@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: {{ highlight }};
+  color: #0f172a;
+  padding: 56px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  position: relative;
+  overflow: hidden;
+}
+body::before {
+  content: "";
+  position: absolute;
+  top: -160px; right: -100px;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, {{ accent }}25 0%, transparent 70%);
+  pointer-events: none;
+}
+.kicker {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.42em;
+  color: {{ accent }};
+  text-transform: uppercase;
+}
+.title {
+  font-size: 36px;
+  font-weight: 800;
+  color: {{ base }};
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  word-break: keep-all;
+  margin-top: 6px;
+}
+.subtitle {
+  font-size: 17px;
+  color: {{ base }};
+  opacity: 0.7;
+  margin-top: 6px;
+  line-height: 1.45;
+  font-weight: 500;
+}
+.flow {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0;
+  position: relative;
+  z-index: 1;
+}
+.node {
+  flex: 1;
+  background: #fff;
+  border: 2px solid {{ base }}22;
+  border-radius: 14px;
+  padding: 18px 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 6px;
+  box-shadow: 0 10px 24px -16px rgba(0,0,0,0.18);
+}
+.node.emph {
+  background: {{ accent }};
+  border-color: {{ accent }};
+  color: #fff;
+  box-shadow: 0 12px 28px -10px {{ accent }}66;
+}
+.node-icon {
+  font-size: 30px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.node-label {
+  font-size: 18px;
+  font-weight: 800;
+  color: {{ base }};
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  word-break: keep-all;
+}
+.node.emph .node-label { color: #fff; }
+.node-desc {
+  font-size: 13px;
+  color: {{ base }};
+  opacity: 0.65;
+  line-height: 1.4;
+  font-weight: 500;
+  word-break: keep-all;
+}
+.node.emph .node-desc { color: #fff; opacity: 0.9; }
+.arrow {
+  flex-shrink: 0;
+  width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: {{ accent }};
+  font-size: 24px;
+  font-weight: 800;
+}
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: {{ base }};
+  opacity: 0.6;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.footer-bar { height: 1px; background: {{ base }}33; flex: 1; }
+</style>
+</head>
+<body>
+  {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
+  <div>
+    <div class="title">{{ title }}</div>
+    {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+  </div>
+  <div class="flow">
+    {% for n in nodes %}
+      <div class="node{% if n.emph %} emph{% endif %}">
+        {% if n.icon %}<div class="node-icon">{{ n.icon }}</div>{% endif %}
+        <div class="node-label">{{ n.label }}</div>
+        {% if n.desc %}<div class="node-desc">{{ n.desc }}</div>{% endif %}
+      </div>
+      {% if not loop.last %}<div class="arrow">→</div>{% endif %}
+    {% endfor %}
+  </div>
+  {% if footer %}
+  <div class="footer">
+    <span>{{ footer }}</span>
+    <div class="footer-bar"></div>
+  </div>
+  {% endif %}
+</body>
+</html>

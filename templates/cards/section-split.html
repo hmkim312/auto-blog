@@ -12,49 +12,81 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(160deg, {{ base }} 0%, #050510 100%);
-  color: #fff;
-  padding: 60px 72px;
   display: grid;
-  grid-template-columns: 1fr 1px 1fr;
-  gap: 48px;
-  align-items: center;
+  grid-template-columns: 1fr 1fr;
+  height: 630px;
+  width: 1200px;
 }
-.divider {
-  width: 1px;
-  height: 60%;
-  background: {{ accent }}55;
-  justify-self: center;
+.left {
+  background: linear-gradient(160deg, {{ accent }} 0%, {{ base }} 100%);
+  color: #fff;
+  padding: 60px 50px 60px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.left::before {
+  content: "";
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 320px; height: 320px;
+  background: radial-gradient(circle, rgba(255,255,255,0.16) 0%, transparent 65%);
+  pointer-events: none;
 }
 .stat-label {
   font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-weight: 800;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: {{ highlight }};
+  color: rgba(255,255,255,0.85);
   margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
 }
 .stat-value {
-  font-size: 120px;
+  font-size: 130px;
   font-weight: 900;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.06em;
   color: #fff;
-  line-height: 1;
+  line-height: 0.95;
   font-variant-numeric: tabular-nums;
+  position: relative;
+  z-index: 1;
 }
 .stat-unit {
   font-size: 22px;
-  color: {{ highlight }};
-  margin-top: 8px;
-  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  margin-top: 12px;
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+.right {
+  background: #fafafa;
+  padding: 60px 60px 60px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  border-left: 1px solid #ececec;
+}
+.right::before {
+  content: "";
+  position: absolute;
+  top: 50px; left: 56px;
+  width: 32px; height: 3px;
+  background: {{ accent }};
 }
 .right-title {
   font-size: 34px;
   font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.02em;
+  color: {{ base }};
+  letter-spacing: -0.022em;
   line-height: 1.2;
-  margin-bottom: 18px;
+  margin-top: 30px;
+  margin-bottom: 22px;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
@@ -76,10 +108,11 @@ body {
   margin-top: 10px;
 }
 .point-text {
-  font-size: 19px;
-  color: #e5e7eb;
+  font-size: 18px;
+  color: #18181b;
   line-height: 1.5;
   font-weight: 500;
+  word-break: keep-all;
 }
 </style>
 </head>
@@ -89,7 +122,6 @@ body {
     <div class="stat-value">{{ stat_value }}</div>
     {% if stat_unit %}<div class="stat-unit">{{ stat_unit }}</div>{% endif %}
   </div>
-  <div class="divider"></div>
   <div class="right">
     <div class="right-title">{{ title }}</div>
     <div class="points">

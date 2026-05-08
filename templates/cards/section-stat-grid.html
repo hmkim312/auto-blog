@@ -26,7 +26,7 @@ body::before {
   width: 5px;
   background: {{ accent }};
 }
-.header { margin-bottom: 32px; }
+.header { margin-bottom: 28px; }
 .kicker {
   font-size: 14px;
   font-weight: 700;
@@ -53,10 +53,17 @@ body::before {
 .grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 18px;
+  gap: 16px;
 }
+/* 갯수별 grid 자동 배치 */
+body[data-count="1"] .grid { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+body[data-count="2"] .grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: 1fr; }
+body[data-count="3"] .grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr; }
+body[data-count="4"] .grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(2, 1fr); }
+body[data-count="5"] .grid,
+body[data-count="6"] .grid { grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); }
+body[data-count="7"] .grid,
+body[data-count="8"] .grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); }
 .cell {
   background: {{ accent }}11;
   border: 1px solid {{ accent }}44;
@@ -88,9 +95,22 @@ body::before {
   opacity: 0.7;
   font-weight: 500;
 }
+/* 갯수별 폰트/패딩 자동 축소 */
+body[data-count="5"] .value,
+body[data-count="6"] .value { font-size: 46px; }
+body[data-count="7"] .value,
+body[data-count="8"] .value { font-size: 38px; }
+body[data-count="5"] .cell,
+body[data-count="6"] .cell { padding: 18px 22px; }
+body[data-count="7"] .cell,
+body[data-count="8"] .cell { padding: 14px 18px; }
+body[data-count="5"] .label,
+body[data-count="6"] .label { font-size: 15px; margin-top: 8px; }
+body[data-count="7"] .label,
+body[data-count="8"] .label { font-size: 13px; margin-top: 6px; }
 </style>
 </head>
-<body>
+<body data-count="{{ stats|length }}">
   <div class="header">
     {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
     <div class="title">{{ title }}</div>

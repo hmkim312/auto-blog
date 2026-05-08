@@ -12,7 +12,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: {{ base }};
+  background: linear-gradient(135deg, {{ accent }} 0%, {{ base }} 100%);
   color: #fff;
   padding: 96px 90px 96px 96px;
   display: flex;
@@ -28,66 +28,83 @@ body::before {
   left: 56px;
   top: 100px; bottom: 100px;
   width: 4px;
-  background: {{ accent }};
+  background: rgba(255,255,255,0.55);
 }
-.glow {
+.glow-tl {
   position: absolute;
-  top: -120px; right: -120px;
+  top: -160px; left: -120px;
   width: 380px; height: 380px;
-  background: radial-gradient(circle, {{ accent }}1c 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+}
+.glow-br {
+  position: absolute;
+  bottom: -160px; right: -120px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, {{ highlight }}38 0%, transparent 70%);
 }
 .icon-mark {
-  font-size: 22px;
+  font-size: 26px;
   margin-bottom: 14px;
-  opacity: 0.95;
+  position: relative;
+  z-index: 1;
 }
 .tag {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.46em;
-  color: {{ accent }};
+  color: rgba(255,255,255,0.88);
   text-transform: uppercase;
   margin-bottom: 22px;
+  position: relative;
+  z-index: 1;
 }
 .title {
-  font-size: 50px;
+  font-size: 52px;
   font-weight: 800;
   letter-spacing: -0.028em;
   line-height: 1.1;
   color: #fff;
   word-break: keep-all;
   max-width: 980px;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.18);
+  position: relative;
+  z-index: 1;
 }
 .subtitle {
-  font-size: 20px;
+  font-size: 21px;
   font-weight: 500;
-  color: {{ highlight }};
+  color: rgba(255,255,255,0.92);
   margin-top: 22px;
   line-height: 1.45;
   max-width: 950px;
   word-break: keep-all;
+  position: relative;
+  z-index: 1;
 }
 .attribution {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.42em;
-  color: {{ highlight }};
+  color: rgba(255,255,255,0.85);
   text-transform: uppercase;
   margin-top: 36px;
   display: flex;
   align-items: center;
   gap: 14px;
+  position: relative;
+  z-index: 1;
 }
 .attribution::after {
   content: "";
   width: 32px;
-  height: 1px;
-  background: {{ accent }};
+  height: 1.5px;
+  background: rgba(255,255,255,0.85);
 }
 </style>
 </head>
 <body>
-  <div class="glow"></div>
+  <div class="glow-tl"></div>
+  <div class="glow-br"></div>
   {% if icon %}<div class="icon-mark">{{ icon }}</div>{% endif %}
   {% if tag %}<div class="tag">{{ tag }}</div>{% endif %}
   <div class="title">{{ title }}</div>

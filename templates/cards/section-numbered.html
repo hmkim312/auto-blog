@@ -95,9 +95,26 @@ body::before {
   font-weight: 500;
   word-break: keep-all;
 }
+/* 갯수별 자동 스케일 */
+body[data-count="6"] .item { padding: 12px 0; grid-template-columns: 90px 1fr; gap: 24px; }
+body[data-count="6"] .item + .item::before { left: 90px; }
+body[data-count="6"] .num { font-size: 48px; }
+body[data-count="6"] .item-title { font-size: 20px; }
+body[data-count="6"] .item-desc { font-size: 14px; }
+
+body[data-count="7"] .item,
+body[data-count="8"] .item { padding: 9px 0; grid-template-columns: 76px 1fr; gap: 20px; }
+body[data-count="7"] .item + .item::before,
+body[data-count="8"] .item + .item::before { left: 76px; }
+body[data-count="7"] .num,
+body[data-count="8"] .num { font-size: 38px; }
+body[data-count="7"] .item-title,
+body[data-count="8"] .item-title { font-size: 17px; margin-bottom: 3px; }
+body[data-count="7"] .item-desc,
+body[data-count="8"] .item-desc { font-size: 13px; line-height: 1.4; }
 </style>
 </head>
-<body>
+<body data-count="{{ items|length }}">
   <div class="header">
     {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
     <div class="title">{{ title }}</div>

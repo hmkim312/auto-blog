@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 1200px; height: 630px;
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background: #fff;
+  display: grid;
+  grid-template-columns: 7fr 5fr;
+  height: 630px;
+  width: 1200px;
+}
+.left {
+  background: linear-gradient(135deg, {{ accent }} 0%, {{ base }} 100%);
+  color: #fff;
+  padding: 60px 56px 50px 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+.left::before {
+  content: "";
+  position: absolute;
+  bottom: -160px; left: -120px;
+  width: 380px; height: 380px;
+  background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.left::after {
+  content: "";
+  position: absolute;
+  top: 30px; right: 30px;
+  width: 18px; height: 18px;
+  border-top: 2px solid rgba(255,255,255,0.35);
+  border-right: 2px solid rgba(255,255,255,0.35);
+}
+.kicker {
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.42em;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+.title {
+  font-size: 64px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: #fff;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  position: relative;
+  z-index: 1;
+}
+.label {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  color: rgba(255,255,255,0.85);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 1;
+}
+.label::before {
+  content: "";
+  width: 28px; height: 1.5px;
+  background: rgba(255,255,255,0.85);
+}
+.right {
+  background: #fafafa;
+  padding: 56px 50px 50px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 1px solid #f0f0f0;
+  position: relative;
+}
+.right::before {
+  content: "";
+  position: absolute;
+  top: 60px; left: 50px;
+  width: 40px; height: 3px;
+  background: {{ accent }};
+}
+.subtitle {
+  font-size: 22px;
+  color: #18181b;
+  line-height: 1.45;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 28px;
+  word-break: keep-all;
+}
+.accent-text {
+  font-size: 15px;
+  color: #52525b;
+  line-height: 1.55;
+  font-weight: 500;
+  margin-top: 16px;
+  word-break: keep-all;
+}
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: #71717a;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+.meta strong {
+  color: {{ accent }};
+  font-weight: 800;
+}
+</style>
+</head>
+<body>
+  <div class="left">
+    {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
+    <div class="title">{{ title }}</div>
+    {% if label %}<div class="label">{{ label }}</div>{% endif %}
+  </div>
+  <div class="right">
+    <div>
+      {% if subtitle %}<div class="subtitle">{{ subtitle }}</div>{% endif %}
+      {% if accent_text %}<div class="accent-text">{{ accent_text }}</div>{% endif %}
+    </div>
+    {% if meta %}
+    <div class="meta">
+      {% for m in meta %}<div>{{ m | safe }}</div>{% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>

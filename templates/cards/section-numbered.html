@@ -13,7 +13,7 @@ html, body {
 }
 body {
   background: {{ base }};
-  color: #fff;
+  color: {{ text_main }};
   padding: 58px 76px;
   display: flex;
   flex-direction: column;
@@ -45,7 +45,7 @@ body::before {
 .title {
   font-size: 38px;
   font-weight: 800;
-  color: #fff;
+  color: {{ text_main }};
   letter-spacing: -0.025em;
   line-height: 1.14;
   word-break: keep-all;
@@ -83,14 +83,14 @@ body::before {
 .item-title {
   font-size: 23px;
   font-weight: 700;
-  color: #fff;
+  color: {{ text_main }};
   letter-spacing: -0.015em;
   margin-bottom: 5px;
   word-break: keep-all;
 }
 .item-desc {
   font-size: 15px;
-  color: #d1d5db;
+  color: {{ text_sub }};
   line-height: 1.5;
   font-weight: 500;
   word-break: keep-all;

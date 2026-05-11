@@ -33,6 +33,37 @@ PALETTES = {
 META_HEADER = re.compile(r"^## 이미지 메타\s*$", re.M)
 
 
+def hex_to_rgb(h: str) -> tuple[int, int, int]:
+    h = h.lstrip("#")
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def relative_luminance(hex_color: str) -> float:
+    r, g, b = hex_to_rgb(hex_color)
+
+    def lin(c: int) -> float:
+        c2 = c / 255
+        return c2 / 12.92 if c2 <= 0.03928 else ((c2 + 0.055) / 1.055) ** 2.4
+
+    return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+
+
+def derive_tones(palette: dict) -> dict:
+    """base 의 명도를 보고 텍스트 색·그라디언트 끝점을 자동 결정.
+
+    라이트 톤(base 밝음): 본문 텍스트 #101828, 보조 #475569, 그라디언트 단색.
+    다크 톤(base 어두움): 본문 텍스트 #FFFFFF, 보조 #CBD5E1, 그라디언트 #050510 끝.
+    """
+    base = palette.get("base", "#1e1b4b")
+    is_light = relative_luminance(base) > 0.5
+    return {
+        **palette,
+        "text_main": "#101828" if is_light else "#FFFFFF",
+        "text_sub": "#475569" if is_light else "#CBD5E1",
+        "gradient_end": base if is_light else "#050510",
+    }
+
+
 def latest_post() -> Path:
     mds = sorted(POSTS_DIR.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True)
     if not mds:
@@ -101,6 +132,9 @@ async def main_async(md_path: Path, only: str | None) -> None:
         key = post_palette or "indigo"
         palette_colors = PALETTES.get(key, PALETTES["indigo"])
         print(f"[palette] preset '{key}' 적용")
+
+    palette_colors = derive_tones(palette_colors)
+    print(f"[tones] text_main={palette_colors['text_main']} text_sub={palette_colors['text_sub']} gradient_end={palette_colors['gradient_end']}")
 
     env = Environment(
         loader=FileSystemLoader(str(TEMPLATES)),

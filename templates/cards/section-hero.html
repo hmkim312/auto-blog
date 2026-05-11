@@ -12,8 +12,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(160deg, {{ base }} 0%, #050510 100%);
-  color: #fff;
+  background: linear-gradient(160deg, {{ base }} 0%, {{ gradient_end }} 100%);
+  color: {{ text_main }};
   padding: 52px 60px;
   display: flex;
   flex-direction: column;
@@ -38,7 +38,7 @@ body {
 .title {
   font-size: 40px;
   font-weight: 800;
-  color: #fff;
+  color: {{ text_main }};
   letter-spacing: -0.02em;
   line-height: 1.15;
   word-break: keep-all;
@@ -74,12 +74,12 @@ body {
 .row-title {
   font-size: 22px;
   font-weight: 700;
-  color: #fff;
+  color: {{ text_main }};
   letter-spacing: -0.01em;
 }
 .row-desc {
   font-size: 16px;
-  color: #cbd5e1;
+  color: {{ text_sub }};
   margin-top: 2px;
   line-height: 1.4;
 }
@@ -121,7 +121,7 @@ body[data-count="8"] .row-desc { font-size: 12px; line-height: 1.35; }
 .footer-chips { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip {
   border: 1px solid {{ accent }}88;
-  color: #fff;
+  color: {{ text_main }};
   padding: 5px 13px;
   border-radius: 999px;
   font-size: 14px;

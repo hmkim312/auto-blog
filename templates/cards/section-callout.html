@@ -30,18 +30,6 @@ body::before {
   width: 4px;
   background: rgba(255,255,255,0.55);
 }
-.glow-tl {
-  position: absolute;
-  top: -160px; left: -120px;
-  width: 380px; height: 380px;
-  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
-}
-.glow-br {
-  position: absolute;
-  bottom: -160px; right: -120px;
-  width: 420px; height: 420px;
-  background: radial-gradient(circle, {{ highlight }}38 0%, transparent 70%);
-}
 .icon-mark {
   font-size: 26px;
   margin-bottom: 14px;
@@ -103,8 +91,6 @@ body::before {
 </style>
 </head>
 <body>
-  <div class="glow-tl"></div>
-  <div class="glow-br"></div>
   {% if icon %}<div class="icon-mark">{{ icon }}</div>{% endif %}
   {% if tag %}<div class="tag">{{ tag }}</div>{% endif %}
   <div class="title">{{ title }}</div>

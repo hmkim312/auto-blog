@@ -20,13 +20,6 @@ body {
   position: relative;
   overflow: hidden;
 }
-.glow {
-  position: absolute;
-  bottom: -100px; left: -100px;
-  width: 360px; height: 360px;
-  background: radial-gradient(circle, {{ accent }}1f 0%, transparent 70%);
-  pointer-events: none;
-}
 .header {
   margin-bottom: 36px;
   position: relative;
@@ -118,7 +111,6 @@ body {
 </style>
 </head>
 <body>
-  <div class="glow"></div>
   <div class="header">
     {% if kicker %}<div class="kicker">{{ kicker }}</div>{% endif %}
     <div class="title">{{ title }}</div>

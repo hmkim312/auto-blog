@@ -90,9 +90,31 @@ def extract_meta(md_path: Path) -> dict:
     return data
 
 
+SIGNATURE_TEXT = "@AI Developer MM"
+
+
+def inject_signature(html: str) -> str:
+    """모든 카드 우하단에 작은 출처 서명을 일괄 삽입.
+
+    mix-blend-mode: difference 로 어두운/밝은 배경 모두에서 자동 대비.
+    """
+    sig = (
+        "<style>.card-signature{position:fixed;right:24px;bottom:16px;z-index:99;"
+        "pointer-events:none;font-family:'Pretendard Variable',Pretendard,"
+        "-apple-system,BlinkMacSystemFont,sans-serif;font-size:13px;"
+        "font-weight:500;letter-spacing:0.01em;"
+        "color:rgba(255,255,255,0.65);mix-blend-mode:difference;}"
+        "</style>"
+        f'<div class="card-signature">{SIGNATURE_TEXT}</div>'
+    )
+    if "</body>" in html:
+        return html.replace("</body>", sig + "</body>", 1)
+    return html + sig
+
+
 def render_html(env: Environment, template_name: str, context: dict) -> str:
     tpl = env.get_template(f"{template_name}.html")
-    return tpl.render(**context)
+    return inject_signature(tpl.render(**context))
 
 
 async def render_one(page, html: str, out_path: Path, width: int = 1200, height: int = 630) -> None:

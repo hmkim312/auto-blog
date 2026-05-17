@@ -49,18 +49,27 @@ def relative_luminance(hex_color: str) -> float:
 
 
 def derive_tones(palette: dict) -> dict:
-    """base 의 명도를 보고 텍스트 색·그라디언트 끝점을 자동 결정.
+    """base·accent 의 명도를 보고 텍스트 색을 자동 결정.
 
-    라이트 톤(base 밝음): 본문 텍스트 #101828, 보조 #475569, 그라디언트 단색.
-    다크 톤(base 어두움): 본문 텍스트 #FFFFFF, 보조 #CBD5E1, 그라디언트 #050510 끝.
+    라이트 톤(base 밝음): 본문 텍스트 #101828, 보조 #475569.
+    다크 톤(base 어두움): 본문 텍스트 #FFFFFF, 보조 #CBD5E1.
+    accent 배경 위 텍스트는 accent 명도 기준으로 별도 결정 (text_on_accent / text_sub_on_accent).
+    gradient_end 는 하위 호환용 (기본 flat 디자인이라 base 와 동일).
     """
     base = palette.get("base", "#1e1b4b")
-    is_light = relative_luminance(base) > 0.5
+    accent = palette.get("accent", "#6366f1")
+    highlight = palette.get("highlight", "#a78bfa")
+    is_light_base = relative_luminance(base) > 0.5
+    is_light_accent = relative_luminance(accent) > 0.5
+    is_light_highlight = relative_luminance(highlight) > 0.5
     return {
         **palette,
-        "text_main": "#101828" if is_light else "#FFFFFF",
-        "text_sub": "#475569" if is_light else "#CBD5E1",
-        "gradient_end": base if is_light else "#050510",
+        "text_main": "#101828" if is_light_base else "#FFFFFF",
+        "text_sub": "#475569" if is_light_base else "#CBD5E1",
+        "text_on_accent": "#101828" if is_light_accent else "#FFFFFF",
+        "text_sub_on_accent": "#475569" if is_light_accent else "#CBD5E1",
+        "text_on_highlight": "#101828" if is_light_highlight else "#FFFFFF",
+        "gradient_end": base,
     }
 
 

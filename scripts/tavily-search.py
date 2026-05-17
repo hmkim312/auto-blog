@@ -7,7 +7,7 @@
 # ]
 # ///
 """
-Tavily 웹 검색 어댑터. /blog-research 스킬이 호출한다.
+Tavily 웹 검색 어댑터. /blog 스킬이 호출한다.
 
 사용법:
   BLOG_RESEARCH_SESSION_ID=<id> uv run scripts/tavily-search.py --query "..."

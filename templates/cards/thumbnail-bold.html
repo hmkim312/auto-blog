@@ -12,8 +12,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(135deg, {{ accent }} 0%, {{ base }} 100%);
-  color: #fff;
+  background: {{ accent }};
+  color: {{ text_on_accent }};
   padding: 80px 90px;
   display: flex;
   flex-direction: column;
@@ -37,7 +37,7 @@ body {
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1.04;
-  color: #fff;
+  color: {{ text_on_accent }};
   word-break: keep-all;
   overflow-wrap: break-word;
   max-width: 1000px;
@@ -66,7 +66,7 @@ body {
 .chip {
   background: rgba(255,255,255,0.16);
   border: 1px solid rgba(255,255,255,0.32);
-  color: #fff;
+  color: {{ text_on_accent }};
   padding: 9px 18px;
   border-radius: 999px;
   font-size: 17px;

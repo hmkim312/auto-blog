@@ -12,8 +12,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(135deg, {{ accent }} 0%, {{ base }} 100%);
-  color: #fff;
+  background: {{ accent }};
+  color: {{ text_on_accent }};
   padding: 96px 90px 96px 96px;
   display: flex;
   flex-direction: column;
@@ -51,7 +51,7 @@ body::before {
   font-weight: 800;
   letter-spacing: -0.028em;
   line-height: 1.1;
-  color: #fff;
+  color: {{ text_on_accent }};
   word-break: keep-all;
   max-width: 980px;
   text-shadow: 0 2px 24px rgba(0,0,0,0.18);

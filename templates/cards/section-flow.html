@@ -70,7 +70,7 @@ body {
 .node.emph {
   background: {{ accent }};
   border-color: {{ accent }};
-  color: #fff;
+  color: {{ text_on_accent }};
   box-shadow: 0 12px 28px -10px {{ accent }}66;
 }
 .node-icon {
@@ -86,7 +86,7 @@ body {
   line-height: 1.2;
   word-break: keep-all;
 }
-.node.emph .node-label { color: #fff; }
+.node.emph .node-label { color: {{ text_on_accent }}; }
 .node-desc {
   font-size: 13px;
   color: {{ base }};
@@ -95,7 +95,7 @@ body {
   font-weight: 500;
   word-break: keep-all;
 }
-.node.emph .node-desc { color: #fff; opacity: 0.9; }
+.node.emph .node-desc { color: {{ text_on_accent }}; opacity: 0.9; }
 .arrow {
   flex-shrink: 0;
   width: 26px;

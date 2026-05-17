@@ -12,8 +12,8 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 body {
-  background: linear-gradient(150deg, {{ base }} 0%, #060614 100%);
-  color: #fff;
+  background: {{ base }};
+  color: {{ text_main }};
   padding: 52px 68px;
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@ body::before {
   font-weight: 800;
   letter-spacing: -0.025em;
   line-height: 1.12;
-  color: #fff;
+  color: {{ text_main }};
   word-break: keep-all;
 }
 .subtitle {
@@ -90,7 +90,7 @@ body[data-count="8"] .grid { grid-template-columns: repeat(4, 1fr); grid-templat
 }
 .delta {
   font-size: 13px;
-  color: #fff;
+  color: {{ text_main }};
   margin-top: 6px;
   opacity: 0.7;
   font-weight: 500;

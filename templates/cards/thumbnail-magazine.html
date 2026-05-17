@@ -19,8 +19,8 @@ body {
   width: 1200px;
 }
 .left {
-  background: linear-gradient(135deg, {{ accent }} 0%, {{ base }} 100%);
-  color: #fff;
+  background: {{ accent }};
+  color: {{ text_on_accent }};
   padding: 60px 56px 50px 60px;
   display: flex;
   flex-direction: column;
@@ -50,7 +50,7 @@ body {
   font-weight: 900;
   letter-spacing: -0.04em;
   line-height: 1;
-  color: #fff;
+  color: {{ text_on_accent }};
   word-break: keep-all;
   overflow-wrap: break-word;
   position: relative;

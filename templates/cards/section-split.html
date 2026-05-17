@@ -18,8 +18,8 @@ body {
   width: 1200px;
 }
 .left {
-  background: linear-gradient(160deg, {{ accent }} 0%, {{ base }} 100%);
-  color: #fff;
+  background: {{ accent }};
+  color: {{ text_on_accent }};
   padding: 60px 50px 60px 60px;
   display: flex;
   flex-direction: column;
@@ -41,7 +41,7 @@ body {
   font-size: 130px;
   font-weight: 900;
   letter-spacing: -0.06em;
-  color: #fff;
+  color: {{ text_on_accent }};
   line-height: 0.95;
   font-variant-numeric: tabular-nums;
   position: relative;

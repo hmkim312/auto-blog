@@ -1,12 +1,12 @@
 ---
 name: blog-discover
-description: AI 트렌드 + 문제 해결형 long-tail 소스(HN·GitHub·arXiv·AI 랩 블로그·GeekNews·Reddit·Stack Overflow·GitHub Issues)에서 최근 항목을 모아 블로그 주제 후보 10개를 제목만 추려준다
+description: 13 소스 (HN·GitHub·arXiv·AI 랩 블로그·GeekNews·Reddit·SO·GH Issues) 에서 블로그 주제 후보 10 개 추출
 argument-hint: "[--profile <name>]"
 ---
 
-호출 시점에 한 번 도는 주제 탐색기. 무인증 RSS·공개 API 만 쓰며 외부 키 불필요. 후보 10개 제목 리스트만 출력하고, 사용자가 번호 고르면 그 주제로 `/blog` 를 안내한다.
+호출 시점에 한 번 도는 주제 탐색기. 무인증 RSS·공개 API 만 쓴다. 후보 10 개 제목 리스트만 출력하고 사용자가 번호 고르면 `/blog` 안내.
 
-> **권장 모델:** Opus 4.7. 점수화·중복 병합·주제 정제 모두 품질 우선.
+권장 모델: Opus 4.7.
 
 ## 사용법
 
@@ -17,101 +17,85 @@ argument-hint: "[--profile <name>]"
 
 ## 실행 흐름
 
-### 1단계: 프로파일 로드 (선택)
+### 1. 프로파일 로드 (선택)
 
-`--profile <name>` 인자가 있으면 `profiles/<name>.yml` 을 Read. 없으면 무프로파일.
-- `niche`, `tone`, `reader_level`, `interests` 가 있으면 점수화 가산점 입력으로 쓴다.
-- 없어도 진행 (한국 입문자 독자 기본값).
+`--profile <name>` 있으면 `profiles/<name>.yml` Read. `niche`/`tone`/`reader_level`/`interests` 가 점수화 입력. 없어도 진행 (한국 입문자 기본).
 
-### 2단계: 후보 수집
-
-Bash 툴로 수집 스크립트 실행 (10~30초 소요):
+### 2. 후보 수집
 
 ```bash
 uv run scripts/discover-topics.py
 ```
 
-stdout 으로 JSON 배열이 나온다. 각 항목 형식:
+stdout 으로 JSON 배열. 형식: `{"source","title","url","summary","published"}`.
 
-```json
-{"source":"hackernews","title":"...","url":"...","summary":"...","published":"..."}
-```
+소스 13 개:
+- 트렌드 (8): `hackernews`, `github_trending_python/typescript`, `arxiv_cs_ai`, `openai_blog`, `anthropic_news`, `deepmind_blog`, `geeknews`
+- long-tail (5): `reddit_claudeai/cursor/localllama`, `stackoverflow_langchain`, `github_issues_langchain-ai_langchain`
 
-소스 목록 (총 13개):
+일부 소스 실패해도 stderr 경고만 남고 나머지 정상.
 
-- 트렌드/뉴스성 (8개): `hackernews`, `github_trending_python`, `github_trending_typescript`, `arxiv_cs_ai`, `openai_blog`, `anthropic_news`, `deepmind_blog`, `geeknews`
-- 문제 해결형 long-tail (5개): `reddit_claudeai`, `reddit_cursor`, `reddit_localllama`, `stackoverflow_langchain`, `github_issues_langchain-ai_langchain`
+### 3. LLM 점수화 + 중복 병합
 
-일부 소스가 실패해도 stderr 경고만 남고 나머지는 정상 반환. long-tail 소스는 사용자가 실제 검색창에 칠 만한 질문 형태(`Why is …`, `How to …`, `… not working`)가 자주 나오므로, 트래픽 누적이 잘 되는 글감 풀이다.
+평가 기준 (가중치 큰 순):
 
-### 3단계: LLM 점수화 + 추리기
+1. **문제 해결형 long-tail (최대 가산점)**: Reddit/SO/GH Issues 또는 제목이 `Why ~ not working`, `How to ~`, `~ error`, `~ 안 될 때` 형태면 자동 가산. **후보 10 개 중 최소 4 개**는 이 카테고리.
+2. **신선도**: 최근 7 일 가산, 30 일+ 감점 (long-tail 질문은 1 년까지 유효).
+3. **입문자 적합**: 학술 raw 감점.
+4. **글로 풀 만한 거리**: 한 편 (2,000 자+) 분량 줄거리 그려지는가.
+5. **한국 검색 수요**: GeekNews 동시 등장 가산.
+6. **빅 키워드 회피**: `RAG`, `LLM`, `agent` 단독 감점. 구체 도구명·문제 상황 우선.
+7. **프로파일 적합**: `interests`/`niche` 와 겹치면 가산.
 
-JSON 을 받아서 한국어 입문자 독자 기준으로 평가한다. 평가 기준 (가중치 큰 순):
+중복 토픽 병합 (같은 주제 여러 소스 → 한 줄).
 
-1. **문제 해결형 long-tail (가장 큰 가산점)**: 검색 의도가 명확한 도구·설정·트러블슈팅 항목이면 강하게 가산. Reddit/Stack Overflow/GitHub Issues 출처거나, 제목이 `Why … not working`, `How to …`, `… error`, `… 안 될 때` 형태면 자동 가산점. 트래픽 누적이 잘 되는 글감이라 후보 10개 중 **최소 4개**는 이 카테고리에서 뽑는다.
-2. **신선도**: 최근 7일 내 항목 가산. 30일 초과면 감점. 단 long-tail 질문은 1년 이내까지도 유효.
-3. **입문자 적합성**: 일반인이 들어도 호기심 가질 만한가? 너무 학술적·논문 raw 면 감점.
-4. **글로 풀 만한 거리**: 블로그 한 편(3,500자) 분량의 줄거리가 그려지는가?
-5. **한국 검색 수요**: GeekNews 에 동시 등장하면 가산점. 영문 전용 학술 토픽이면 감점. (영어권 long-tail 질문은 한국어로 풀어 쓰면 검색 수요 있음 — 감점 대상 아님.)
-6. **빅 키워드 회피**: `RAG`, `LLM`, `agent` 같은 광역 단어만 들어간 항목은 감점 (신생 도메인이 경쟁 못 이김). 구체 도구명·문제 상황이 들어간 항목 우선.
-7. **프로파일 적합성**: 프로파일이 있으면 `interests` / `niche` 와 겹치는지.
+### 4. 후보 10 개 출력 (제목만)
 
-내부 처리 후 **중복 토픽 병합** (같은 주제가 여러 소스에 있으면 한 줄로):
-- 예: "Claude 4.7 Opus 발표" 가 anthropic_news 와 hackernews 양쪽에 있으면 하나로.
-
-### 4단계: 후보 10개 출력 (제목만)
-
-표·이모지 없이 번호 리스트만. 출처·URL·근거는 표시하지 않는다.
+표·이모지·출처·URL·근거 X. 번호 리스트만.
 
 ```
-주제 후보 10개입니다. 번호로 고르세요. (다른 후보 보고 싶으면 "다시" 라고 답해주세요)
+주제 후보 10 개입니다. 번호로 고르세요. (다른 후보 보고 싶으면 "다시")
 
-1. Claude Code Skills — 슬래시 커맨드 자동화의 새 모델
-2. uv 1.0 GA — pip·poetry 시대가 끝난 이유
-3. ...
+1. ...
 10. ...
 ```
 
-### 5단계: 사용자 선택 처리
+### 5. 사용자 선택 처리
 
-- 번호 (예: `3`) → 해당 제목을 주제 키워드로 정제(필요시 사용자 말투에 맞게 한 줄로 다듬어 확인) 후 사용자에게 "이 주제로 `/blog` 를 시작할까요?" 물어본다. 동의하면 `/blog <정제된 주제>` 호출을 안내.
-- `다시` / `다른 거` → 3단계에서 11~20위 후보로 다시 10개 출력. 한 세션에서 최대 2회까지 재추천.
-- 자유 키워드 (예: "uv 말고 다른 패키지 매니저") → 후보 안에서 가까운 것 1~3개 재추천.
-- 모두 마음에 안 들면 그대로 종료. 사용자가 직접 주제 입력하면 바로 `/blog` 안내.
+- 번호 → 제목을 한국어 톤으로 정제 (사용자 확인) → "이 주제로 `/blog` 시작?" 동의 시 `/blog <정제 주제>` 안내.
+- `다시` → 11~20 위 재출력. 한 세션 최대 2 회.
+- 자유 키워드 → 후보 안 가까운 1~3 개 재추천.
+- 다 거부하고 직접 입력도 없으면 종료.
 
-### 6단계: 정탐 (선택)
+### 6. 정탐 (선택)
 
-사용자가 번호를 고른 직후, **글 쓸 거리가 충분한지** 가벼운 사전 확인을 위해 Tavily 1회 검색을 자동 실행할지 물어본다. 동의 시:
+번호 선택 직후 "글거리 충분한지 사전 확인 Tavily 1 회 돌릴까?" 물음. 동의 시:
 
 ```bash
 BLOG_RESEARCH_SESSION_ID=discover-$(date +%s)-$$ uv run scripts/tavily-search.py \
   --query "<선택 주제> 2026" --max-results 10 --include-answer
 ```
 
-결과 요약(2~3줄) 보여주고 "충분해 보이면 그대로 /blog 진행, 부족하면 후보 다시 고르기" 가능. 정탐 1회는 선택. 사용자가 스킵하면 바로 /blog 안내.
-
-> 정탐의 Tavily 호출은 `/blog-research` 의 8회 예산과 별도 세션 ID 라 예산을 갉아먹지 않는다.
+별도 세션 ID 라 `/blog` 의 8 회 예산을 안 갉아먹는다. 결과 2~3 줄 요약 → 충분하면 `/blog` 진행, 부족하면 후보 다시.
 
 ## 출력 규칙
 
-- **제목만**. 출처·URL·근거·점수·태그 모두 출력 금지.
-- 후보 정확히 **10개**. 항목 부족하면 9개 이하라도 OK 하지만 사유 한 줄 명시.
-- 후보 제목은 **사용자가 그대로 `/blog` 에 넣을 수 있는 형태**로 정제. 예:
-  - 원본: "Anthropic releases Claude 4.7 with extended thinking" 
-  - 정제: "Claude 4.7 — extended thinking이 바꾸는 것"
-  - long-tail 예: "Why does Cursor keep looping on tool calls?" → "Cursor 에이전트가 무한 루프에 빠질 때 점검할 것"
-- 정제는 한국어 + 사용자 톤. CLAUDE.md 의 제목 규칙(템플릿 공식 금지) 따르되 너무 다듬지 말고 키워드성을 살린다.
-- **저작권 가드 — 원문 직역 금지**. 영어권 소스(Reddit/SO/GitHub Issues/HN 등) 는 *주제·문제 지점*만 추출해 한국어로 새로 정제한다. 원문 제목·요약을 그대로 번역해 옮기지 않는다 (사실·아이디어는 보호 대상 아니지만 표현은 보호됨). 본문은 어차피 `/blog` 가 Tavily 로 다시 검색해 새로 작성하므로 안전하다.
+- **제목만**. 출처·URL·근거·점수·태그 X.
+- 정확히 10 개. 부족하면 9 개 이하라도 OK + 사유 한 줄.
+- 제목은 사용자가 그대로 `/blog` 에 넣을 형태로 정제. 예:
+  - `Anthropic releases Claude 4.7 with extended thinking` → `Claude 4.7 — extended thinking 이 바꾸는 것`
+  - long-tail: `Why does Cursor keep looping on tool calls?` → `Cursor 에이전트가 무한 루프에 빠질 때 점검할 것`
+- 정제는 한국어 + 사용자 톤. CLAUDE.md 제목 규칙 따르되 키워드성 살린다.
+- **저작권 가드**: 영어권 소스는 *주제·문제 지점*만 추출해 한국어로 새로 정제. 원문 제목·요약 직역 X.
 
 ## 에러 대응
 
-- 모든 소스 실패 → "외부 소스 모두 실패. 네트워크 또는 API 차단 의심. 잠시 후 다시 시도하세요" 출력 후 종료.
-- 일부 소스만 실패 → stderr 경고는 사용자에게 전달하지 않고, 가용 소스로만 진행.
-- 스크립트 stdout 이 비어있으면 → 즉시 종료, 빈 후보 출력 금지.
+- 모든 소스 실패 → "외부 소스 모두 실패. 네트워크 또는 API 차단 의심" 출력 후 종료.
+- 일부 소스 실패 → stderr 만 (사용자에게 전달 X), 가용 소스로 진행.
+- stdout 비면 즉시 종료. 빈 후보 출력 X.
 
 ## 규칙
 
-- **후보는 제목만**. 출처/URL/근거는 사용자 요청 시에만 별도로 보여준다.
-- **재추천 2회 한도**. 그 이상은 "직접 주제를 입력해주세요" 로 유도.
-- 정탐 검색은 항상 **선택**. 자동 실행 금지.
-- 점수화·중복 병합 로직은 LLM 판단이라 결정론적이지 않다. 같은 입력에도 결과가 조금 달라질 수 있음을 사용자에게 한 번은 안내.
+- 재추천 최대 2 회. 그 이상은 "직접 주제 입력해 주세요".
+- 정탐 검색은 항상 선택. 자동 실행 X.
+- 점수화는 LLM 판단 → 같은 입력에도 결과 조금 달라질 수 있음을 한 번은 안내.

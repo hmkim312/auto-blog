@@ -1,6 +1,6 @@
 # 필자 프로파일 템플릿. profiles/<your-name>.yml 로 복사해 채워 쓴다.
 # 채워진 .yml 은 .gitignore 로 추적 제외 (개인 정보 보호). example.yml 만 추적.
-# /blog-research --profile <your-name> 으로 호출.
+# /blog --profile <your-name> 으로 호출.
 
 # 프로파일 이름. 파일명과 동일하게.
 name: example
